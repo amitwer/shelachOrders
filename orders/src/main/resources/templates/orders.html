@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Order</title>
-    <H1>Welcome to the ordering page</H1>
-    <H2>please place your order here</H2>
 </head>
 <body>
+<H1><span th:text="'Welcome '+${username}+' to the ordering page'"></span></H1>
+<H2>please place your order here</H2>
 
 </body>
 </html>
