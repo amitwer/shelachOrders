@@ -12,7 +12,8 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
 logging:
   level:
-    root: DEBUG
+    root: INFO
+    com.shelach: DEBUG
 server:
   tomcat:
     access-log-enabled: true
