@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Place Order</title>
+</head>
+<!--TODO: add dropdown menu's for מחלקה, שם מוצר and autofill the rest based on the comax DB -->
+<script type="text/javascript">
+    function addRowToTable() {
+        let table = document.getElementById("orderTable");
+        let row = table.rows[table.rows.length - 1];
+        let cln = row.cloneNode(true);
+        row.cells[0].innerHTML = '<input type="checkbox" id="checkbox">';
+        table.appendChild(cln);
+    }
+
+    function deleteCheckedRows() {
+        let i;
+        let table = document.getElementById("orderTable");
+        let rowCount = table.rows.length;
+        if (rowCount > 2) {
+            for (i = rowCount - 1; i > 0; i--) {
+                let row = table.rows[i];
+                let chkbox = row.cells[0].getElementsByTagName("input")[0];
+                if (chkbox != null && chkbox.type == 'checkbox' && chkbox.checked === true) {
+                    table.deleteRow(i);
+                }
+            }
+        }
+    }
+</script>
+<body>
+<style type="text/css">
+    .tg {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tg td {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        padding: 10px 5px;
+        border-style: solid;
+        border-width: 1px;
+        overflow: hidden;
+        word-break: normal;
+        border-color: black;
+    }
+
+    .tg th {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        font-weight: normal;
+        padding: 10px 5px;
+        border-style: solid;
+        border-width: 1px;
+        overflow: hidden;
+        word-break: normal;
+        border-color: black;
+    }
+
+    .tg .tg-abx8 {
+        font-weight: bold;
+        background-color: #c0c0c0;
+        text-align: left;
+        vertical-align: top
+    }
+
+    .tg .tg-baqh {
+        text-align: center;
+        vertical-align: top
+    }
+
+    .tg .tg-0lax {
+        text-align: left;
+        vertical-align: top
+    }
+</style>
+
+<table class="tg" id="orderTable">
+    <tr>
+        <th class="tg-baqh"></th>
+        <th class="tg-abx8">מחלקה</th>
+        <th class="tg-abx8">קוד מוצר</th>
+        <th class="tg-abx8">שם מוצר</th>
+        <th class="tg-abx8">מחיר ליחידה</th>
+        <th class="tg-abx8">כמות להזמנה</th>
+        <th class="tg-abx8">סה"כ מחיר</th>
+    </tr>
+    <tr>
+        <td class="tg-0lax">
+            <button onclick="addRowToTable()" type="button" id="addRowBtn">+</button>
+        </td>
+        <td class="tg-0lax"></td>
+        <td class="tg-0lax"></td>
+        <td class="tg-0lax"></td>
+        <td class="tg-0lax"></td>
+        <td class="tg-0lax"></td>
+        <td class="tg-0lax"></td>
+    </tr>
+</table>
+<button onclick="deleteCheckedRows()" type="button" id="deleteRowsBtn">Delete Rows</button>
+</body>
+</html>
