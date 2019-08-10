@@ -18,8 +18,7 @@ class OrdersControllerTest {
     @BeforeEach
     void setup() {
         dummyAuthentication = new UsernamePasswordAuthenticationToken("dummy", "dummy", Collections.emptyList());
-        SecurityContextHolder.getContext().setAuthentication(
-                dummyAuthentication);
+        SecurityContextHolder.getContext().setAuthentication(dummyAuthentication);
     }
 
     @Test
