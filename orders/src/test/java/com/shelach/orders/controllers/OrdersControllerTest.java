@@ -45,8 +45,8 @@ class OrdersControllerTest {
     void ordersPageReturnsAllAvailableProductsForCustomer() {
         ExtendedModelMap model = new ExtendedModelMap();
         List<ProductDTO> productsList = List.of(
-                new ProductDTO("name", 1.0, "barcode"),
-                new ProductDTO("name2", 2.0, "barcode2")
+                new ProductDTO("name", 1.0, "barcode", "category1"),
+                new ProductDTO("name2", 2.0, "barcode2", "category2")
 
         );
         when(productsService.getProducts((anyString())))

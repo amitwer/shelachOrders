@@ -44,10 +44,10 @@ class OrdersControllerClientSideTest {
     private ProductsService productsService;
 
     private static Stream<List<ProductDTO>> expectedProductsProvider() {
-        return Stream.of(List.of(new ProductDTO("name", 1.0, "barcode")),
+        return Stream.of(List.of(new ProductDTO("name", 1.0, "barcode", "category")),
                 List.of(
-                        new ProductDTO("name1", 1.0, "barcode1"),
-                        new ProductDTO("name2", 2.0, "barcode2")
+                        new ProductDTO("name1", 1.0, "barcode1", "category1"),
+                        new ProductDTO("name2", 2.0, "barcode2", "category2")
                 ));
     }
 
@@ -76,7 +76,7 @@ class OrdersControllerClientSideTest {
     @MethodSource("expectedProductsProvider")
     @WithMockUser(username = "Amit", password = "Amit")
     void loginReturnsProductTable(List<ProductDTO> expectedProducts) throws Exception {
-        List<ProductDTO> expectedList = List.of(new ProductDTO("name", 1.0, "barcode"));
+        List<ProductDTO> expectedList = List.of(new ProductDTO("name", 1.0, "barcode", "category"));
         when(productsService.getProducts(any())).thenReturn(expectedList);
         MvcResult mvcResult = mvc.perform(get("").with(csrf())).andReturn();
         verifyOrdersTable(expectedList, mvcResult);
