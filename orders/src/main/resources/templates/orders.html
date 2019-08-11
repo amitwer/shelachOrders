@@ -8,6 +8,22 @@
 <body>
 <H1><span th:text="'Welcome '+${username}+' to the ordering page'"></span></H1>
 <H2>please place your order here</H2>
+<table id="orders_table">
+    <thead>
+    <tr>
+        <th>מוצר</th>
+        <th>ברקוד</th>
+        <th>מחיר ליחידה</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.barcode}"></td>
+        <td th:text="${product.price}"></td>
+    </tr>
+    </tbody>
+</table>
 
 
 <form action="#" th:action="@{/order}" th:object="${orders}" method="post">
