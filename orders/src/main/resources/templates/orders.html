@@ -8,22 +8,32 @@
 <body>
 <H1><span th:text="'Welcome '+${username}+' to the ordering page'"></span></H1>
 <H2>please place your order here</H2>
-<table id="orders_table">
-    <thead>
-    <tr>
-        <th>מוצר</th>
-        <th>ברקוד</th>
-        <th>מחיר ליחידה</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="product : ${products}">
-        <td th:text="${product.name}"></td>
-        <td th:text="${product.barcode}"></td>
-        <td th:text="${product.price}"></td>
-    </tr>
-    </tbody>
-</table>
+
+
+<form action="#" th:action="@{/order}" th:object="${orders}" method="post">
+    <table id="orders_table">
+        <thead>
+        <tr>
+            <th>מוצר</th>
+            <th>ברקוד</th>
+            <th>מחיר ליחידה</th>
+            <th>כמות</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order, itemStat : *{orders}">
+            <input type="hidden" th:field="*{orders[__${itemStat.index}__].name}">
+            <input type="hidden" th:field="*{orders[__${itemStat.index}__].barcode}">
+            <input type="hidden" th:field="*{orders[__${itemStat.index}__].price}">
+            <td th:text="*{orders[__${itemStat.index}__].name}"></td>
+            <td th:text="*{orders[__${itemStat.index}__].barcode}"></td>
+            <td th:text="*{orders[__${itemStat.index}__].price}"></td>
+            <td><input th:field="*{orders[__${itemStat.index}__].quantity}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <input type="submit"/>
+</form>
 
 </body>
 </html>
