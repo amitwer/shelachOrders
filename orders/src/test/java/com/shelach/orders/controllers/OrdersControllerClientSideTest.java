@@ -1,7 +1,7 @@
 package com.shelach.orders.controllers;
 
-import com.shelach.orders.data.ProductDTO;
-import com.shelach.orders.services.ProductsService;
+import com.shelach.orders.data.Order;
+import com.shelach.orders.services.FetchOrdersService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -41,16 +41,15 @@ class OrdersControllerClientSideTest {
     private MockMvc mvc;
 
     @MockBean
-    private ProductsService productsService;
+    private FetchOrdersService fetchOrdersService;
 
-    private static Stream<List<ProductDTO>> expectedProductsProvider() {
-        return Stream.of(List.of(new ProductDTO("name", 1.0, "barcode")),
+    private static Stream<List<Order>> expectedProductsProvider() {
+        return Stream.of(List.of(new Order("name", "barcode", 6, 12.2)),
                 List.of(
-                        new ProductDTO("name1", 1.0, "barcode1"),
-                        new ProductDTO("name2", 2.0, "barcode2")
+                        new Order("name1", "barcode1", 1, 1.1),
+                        new Order("name2", "barcode2", 2, 2.2)
                 ));
     }
-
 
     @SuppressWarnings("unused")
 
@@ -61,7 +60,6 @@ class OrdersControllerClientSideTest {
         assertThat(mvcResult.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(mvcResult.getResponse().getContentAsString()).contains("<H1><span>Welcome Amit to the ordering page</span></H1>");
     }
-
 
     @Test
     void loginPageDeclinesUserWithIncorrectCredentials() throws Exception {
@@ -75,16 +73,15 @@ class OrdersControllerClientSideTest {
     @ParameterizedTest
     @MethodSource("expectedProductsProvider")
     @WithMockUser(username = "Amit", password = "Amit")
-    void loginReturnsProductTable(List<ProductDTO> expectedProducts) throws Exception {
-        List<ProductDTO> expectedList = List.of(new ProductDTO("name", 1.0, "barcode"));
-        when(productsService.getProducts(any())).thenReturn(expectedList);
+    void loginReturnsProductTable(List<Order> expectedProducts) throws Exception {
+        when(fetchOrdersService.getProducts(any())).thenReturn(expectedProducts);
         MvcResult mvcResult = mvc.perform(get("").with(csrf())).andReturn();
-        verifyOrdersTable(expectedList, mvcResult);
+        verifyOrdersTable(expectedProducts, mvcResult);
 
 
     }
 
-    private void verifyOrdersTable(List<ProductDTO> expectedList, MvcResult mvcResult) throws UnsupportedEncodingException {
+    private void verifyOrdersTable(List<Order> expectedList, MvcResult mvcResult) throws UnsupportedEncodingException {
         String rawHtml = mvcResult.getResponse().getContentAsString();
         Document parsedHtml = Jsoup.parse(rawHtml);
         Element ordersTable = parsedHtml.body().getElementById("orders_table");
@@ -93,17 +90,26 @@ class OrdersControllerClientSideTest {
         verifyOrdersTableBody(ordersTable, expectedList);
     }
 
-    private void verifyOrdersTableBody(Element ordersTable, List<ProductDTO> expectedList) {
+    private void verifyOrdersTableBody(Element ordersTable, List<Order> expectedList) {
         Elements tbody = ordersTable.getElementsByTag("tbody");
         assertThat(tbody).isNotNull().hasSize(1);
         Elements rows = tbody.get(0).getElementsByTag("tr");
         assertThat(rows).hasSize(expectedList.size());
         for (int i = 0; i < expectedList.size(); i++) {
             List<String> tableRow = rows.get(i).getElementsByTag("td")
-                    .stream().map(Element::text).collect(Collectors.toList());
-            ProductDTO expected = expectedList.get(i);
-            assertThat(tableRow).isEqualTo(List.of(expected.getName(), expected.getBarcode(), "" + expected.getPrice()));
+                    .stream().map(this::extractTextFromElement).collect(Collectors.toList());
+            Order expected = expectedList.get(i);
+            assertThat(tableRow).isEqualTo(List.of(expected.getName(), expected.getBarcode(), "" +
+                    expected.getPrice(), "" + expected.getQuantity()));
         }
+    }
+
+    private String extractTextFromElement(Element element) {
+        Elements inputTags = element.getElementsByTag("input");
+        if (inputTags.size() == 1) {
+            return inputTags.get(0).val();
+        }
+        return element.text();
     }
 
     private void verifyOrdersTableHeader(Element ordersTable) {
@@ -111,7 +117,7 @@ class OrdersControllerClientSideTest {
         assertThat(thead).isNotNull().hasSize(1);
         List<String> headerTexts = thead.get(0).getElementsByTag("th").stream().map(Element::text)
                 .collect(Collectors.toList());
-        assertThat(headerTexts).isEqualTo(List.of("מוצר", "ברקוד", "מחיר ליחידה"));
+        assertThat(headerTexts).isEqualTo(List.of("מוצר", "ברקוד", "מחיר ליחידה", "כמות"));
 
     }
 

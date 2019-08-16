@@ -1,7 +1,8 @@
 package com.shelach.orders.controllers;
 
-import com.shelach.orders.data.ProductDTO;
-import com.shelach.orders.services.ProductsService;
+import com.shelach.orders.data.Order;
+import com.shelach.orders.data.OrderList;
+import com.shelach.orders.services.FetchOrdersService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,40 +20,40 @@ import static org.mockito.Mockito.when;
 class OrdersControllerTest {
 
     private UsernamePasswordAuthenticationToken dummyAuthentication;
-    private ProductsService productsService;
+    private FetchOrdersService fetchOrdersService;
 
     @BeforeEach
     void setup() {
         dummyAuthentication = new UsernamePasswordAuthenticationToken("dummy", "dummy", Collections.emptyList());
         SecurityContextHolder.getContext().setAuthentication(dummyAuthentication);
-        productsService = mock(ProductsService.class);
+        fetchOrdersService = mock(FetchOrdersService.class);
     }
 
     @Test
     void mainPageReturnsOrdersTemplate() {
-        String template = new OrdersController(productsService).mainPage(mock(ExtendedModelMap.class));
+        String template = new OrdersController(fetchOrdersService).mainPage(mock(ExtendedModelMap.class));
         assertThat(template).isEqualTo("orders");
     }
 
     @Test
     void mainPageStoresUserNameInModel() {
         ExtendedModelMap model = new ExtendedModelMap();
-        new OrdersController(productsService).mainPage(model);
+        new OrdersController(fetchOrdersService).mainPage(model);
         assertThat(model.get("username")).isEqualTo(dummyAuthentication.getName());
     }
 
     @Test
     void ordersPageReturnsAllAvailableProductsForCustomer() {
         ExtendedModelMap model = new ExtendedModelMap();
-        List<ProductDTO> productsList = List.of(
-                new ProductDTO("name", 1.0, "barcode"),
-                new ProductDTO("name2", 2.0, "barcode2")
+        List<Order> productsList = List.of(
+                new Order("name", "barcode", 1, 12.0),
+                new Order("name2", "barcode2", 8, 6.2)
 
         );
-        when(productsService.getProducts((anyString())))
+        when(fetchOrdersService.getProducts((anyString())))
                 .thenReturn(productsList);
-        new OrdersController(productsService).mainPage(model);
-        assertThat(model.get("products")).isEqualTo(productsList);
+        new OrdersController(fetchOrdersService).mainPage(model);
+        assertThat(model.get("orders")).isEqualTo(new OrderList(productsList));
 
     }
 }
