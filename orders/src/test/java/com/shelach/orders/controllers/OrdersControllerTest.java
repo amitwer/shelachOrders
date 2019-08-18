@@ -46,8 +46,8 @@ class OrdersControllerTest {
     void ordersPageReturnsAllAvailableProductsForCustomer() {
         ExtendedModelMap model = new ExtendedModelMap();
         List<Order> productsList = List.of(
-                new Order("name", "barcode", 1, 12.0),
-                new Order("name2", "barcode2", 8, 6.2)
+                new Order("name", "barcode", "category", 1, 12.0),
+                new Order("name2", "barcode2", "category2", 8, 6.2)
 
         );
         when(fetchOrdersService.getProducts((anyString())))

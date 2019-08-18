@@ -24,7 +24,7 @@ class AcceptOrdersControllerTest {
     void acceptOrdersSendsOrderToComaxService() {
         PlaceOrdersService placeOrderService = mock(PlaceOrdersService.class);
         AcceptOrdersController acceptOrdersController = new AcceptOrdersController(placeOrderService);
-        OrderList orders = new OrderList(new Order("name", "barcode", 12, 0.5));
+        OrderList orders = new OrderList(new Order("name", "barcode", "category", 12, 0.5));
         acceptOrdersController.acceptOrder(orders);
         verify(placeOrderService, times(1)).placeComaxOrder(eq(orders));
 

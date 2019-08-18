@@ -40,7 +40,7 @@ class AcceptOrdersControllerClientSideTest {
     @Test
     @WithMockUser
     void acceptOrdersReturnsOk() throws Exception {
-        OrderList orderList = new OrderList(new Order("name", "barcode", 10, 12.4));
+        OrderList orderList = new OrderList(new Order("name", "barcode", "category", 10, 12.4));
         MvcResult result = mvc.perform(post("/order").with(csrf()).flashAttr("orders", orderList)).andReturn();
         assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
         verify(placeOrdersService, times(1)).placeComaxOrder(eq(orderList));
@@ -50,7 +50,7 @@ class AcceptOrdersControllerClientSideTest {
     @Test
     @WithMockUser
     void acceptOrdersCallsComaxWithCorrectParam() throws Exception {
-        OrderList orderList = new OrderList(new Order("name", "barcode", 10, 12.4));
+        OrderList orderList = new OrderList(new Order("name", "barcode", "category", 10, 12.4));
         mvc.perform(post("/order").with(csrf()).flashAttr("orders", orderList)).andReturn();
         verify(placeOrdersService, times(1)).placeComaxOrder(eq(orderList));
     }

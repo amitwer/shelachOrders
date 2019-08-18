@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class Order {
     private String name;
     private String barcode;
+    private String category;
     private int quantity;
     private Double price;
 }

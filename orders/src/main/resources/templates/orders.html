@@ -9,6 +9,7 @@
     window.productsByName = new Map();
     window.productsByBarcode = new Map();
     window.productsByCategory = new Map();
+    window.finalOrders = new Set();
 
     function removeOptions(selectbox) {
         var i;
@@ -22,7 +23,8 @@
         window.orderTable = document.getElementById("orderTable");
         window.orderSummeryTable = document.getElementById("orderSummeryTable");
         window.categories = new Set();
-        window.products = [[${products}]];
+        window.products = [[${orders}]].orders;
+        console.log(window.products);
         window.selectDepartmentDropdown = document.getElementById("selectDepartment");
         window.chooseProductName = document.getElementById("chooseProductName");
         window.enterAmount = document.getElementById("enterAmount");
@@ -46,24 +48,38 @@
     function updateOrderTableInfoFromProduct(product) {
         let row = window.orderTable.rows[window.orderTable.rows.length - 1];
         this.selectDepartmentDropdown.value = product.category;
+        let option = document.createElement('option');
+        option.text = product.name;
+        window.chooseProductName.appendChild(option);
         row.cells[3].innerText = product.price;
         window.barcode_input.value = product.barcode;
         row.cells[5].innerText = "0";
+    }
+
+    function clearOrderTableExceptCategory() {
+        let row = window.orderTable.rows[window.orderTable.rows.length - 1];
+        row.cells[3].innerText = "";
+        window.barcode_input.value = "";
+        row.cells[5].innerText = "";
+        window.chooseProductName.value = "";
     }
 
     function getProductFromName() {
         if (window.productsByName.has(window.chooseProductName.value)) {
             let product = window.productsByName.get(window.chooseProductName.value);
             updateOrderTableInfoFromProduct(product);
+        } else {
+            clearOrderTableExceptCategory();
         }
     }
 
     function getProductFromBarcode() {
         if (window.productsByBarcode.has(window.barcode_input.value)) {
-            let product = window.productsByName.get(window.barcode_input.value);
+            let product = window.productsByBarcode.get(window.barcode_input.value);
             updateOrderTableInfoFromProduct(product);
         } else {
-            window.barcode_input.value = "";
+            clearOrderTableExceptCategory();
+            window.chooseProductName.selectedIndex = 0;
         }
     }
 
@@ -73,6 +89,10 @@
     }
 
     function departmentSelected() {
+        let i;
+        for (i = window.chooseProductName.length - 1; i >= 0; i--) {
+            window.chooseProductName.removeChild(window.chooseProductName.lastChild)
+        }
         let option = document.createElement('option');
         option.text = "בחר מוצר...";
         window.chooseProductName.appendChild(option);
@@ -114,15 +134,22 @@
             newRow.cells[3].innerText = row.cells[3].innerText;
             newRow.cells[4].innerText = window.enterAmount.value;
             newRow.cells[5].innerText = row.cells[5].innerText;
+            window.finalOrders.add(window.productsByBarcode.get(window.barcode_input.value));
             resetOrderTable();
+        }
+    }
+
+    function sendOrder() {
+        for (let order of window.finalOrders) {
+            console.log(order);
         }
     }
 </script>
 
 <body onload="initPage()">
 
-<H1><span th:text="'Welcome '+${username}+' to the ordering page'"></span></H1>
-<H2>please place your order here</H2>
+<H1><span th:text="${username}+' ברוך הבא '"></span></H1>
+<H2>אנא הוסף את המוצרים הרצויים להזמנה</H2>
 <style type="text/css">
     .tg {
         border-collapse: collapse;
@@ -193,14 +220,18 @@
             </tr>
             <tr>
                 <td class="tg-73oq">
-                    <select id="selectDepartment" onchange="departmentSelected()">
-                        <option>בחר מחלקה...</option>
-                    </select>
+                    <label for="selectDepartment"></label><select id="selectDepartment" onchange="departmentSelected()">
+                    <option>בחר מחלקה...</option>
+                </select>
                 </td>
-                <td class="tg-0pky"><input type="text" id="enterBarcode" onchange="getProductFromBarcode()"></td>
-                <td class="tg-0pky"><select id="chooseProductName" onchange="getProductFromName()"></select></td>
+                <td class="tg-0pky"><label for="enterBarcode"></label><input type="text" id="enterBarcode"
+                                                                             onchange="getProductFromBarcode()"></td>
+                <td class="tg-0pky"><label for="chooseProductName"></label><select id="chooseProductName"
+                                                                                   onchange="getProductFromName()"></select>
+                </td>
                 <td class="tg-0pky"></td>
-                <td class="tg-0pky"><input type="number" id="enterAmount" onchange="amountChosen()"></td>
+                <td class="tg-0pky"><label for="enterAmount"></label><input type="number" id="enterAmount"
+                                                                            onchange="amountChosen()"></td>
                 <td class="tg-0pky"></td>
             </tr>
         </table>
@@ -214,6 +245,7 @@
 <br>
 <br>
 <br>
+<H2>Order Summery</H2>
 <table class="tg" id="orderSummeryTable">
     <tr>
         <th class="tg-cscf">מחלקה</th>
@@ -224,6 +256,8 @@
         <th class="tg-6e8n">סה"כ מחיר</th>
     </tr>
 </table>
+<br>
+<button type="button" id="sendOrderBtn" onclick="sendOrder()">בצע הזמנה</button>
 <style type="text/css">
     .inline-block-child {
         display: inline-block;

@@ -18,6 +18,5 @@ public class OrderList {
 
     public OrderList(Order... orders) {
         this.orders = List.of(orders);
-
     }
 }
