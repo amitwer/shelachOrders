@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.util.Lists.list;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -44,10 +45,10 @@ class OrdersControllerClientSideTest {
     private FetchOrdersService fetchOrdersService;
 
     private static Stream<List<Order>> expectedProductsProvider() {
-        return Stream.of(List.of(new Order("name", "barcode", 6, 12.2),"category"),
-                List.of(
-                        new Order("name1", "barcode1", 1, 1.1,"category1"),
-                        new Order("name2", "barcode2", 2, 2.2,"cat 2")
+        return Stream.of(list(new Order("category", "name", "barcode", 6, 12.2)),
+                list(
+                        new Order("category1", "name1", "barcode1", 1, 1.1),
+                        new Order("category2", "name2", "barcode2", 2, 2.2)
                 ));
     }
 
@@ -99,7 +100,7 @@ class OrdersControllerClientSideTest {
             List<String> tableRow = rows.get(i).getElementsByTag("td")
                     .stream().map(this::extractTextFromElement).collect(Collectors.toList());
             Order expected = expectedList.get(i);
-            assertThat(tableRow).isEqualTo(List.of(expected.getName(), expected.getBarcode(), "" +
+            assertThat(tableRow).isEqualTo(list(expected.getName(), expected.getBarcode(), "" +
                     expected.getPrice(), "" + expected.getQuantity()));
         }
     }
@@ -117,7 +118,7 @@ class OrdersControllerClientSideTest {
         assertThat(thead).isNotNull().hasSize(1);
         List<String> headerTexts = thead.get(0).getElementsByTag("th").stream().map(Element::text)
                 .collect(Collectors.toList());
-        assertThat(headerTexts).isEqualTo(List.of("מוצר", "ברקוד", "מחיר ליחידה", "כמות"));
+        assertThat(headerTexts).isEqualTo(list("מוצר", "ברקוד", "מחיר ליחידה", "כמות"));
 
     }
 
