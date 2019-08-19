@@ -20,6 +20,7 @@
 
     function initPage() {
         window.barcode_input = document.getElementById("enterBarcode");
+        window.barcode_input.disabled = true;
         window.orderTable = document.getElementById("orderTable");
         window.orderSummaryTable = document.getElementById("orderSummaryTable").getElementsByTagName("tbody")[0];
         window.categories = new Set();
@@ -93,6 +94,7 @@
         for (i = window.chooseProductName.length - 1; i >= 0; i--) {
             window.chooseProductName.removeChild(window.chooseProductName.lastChild)
         }
+        clearOrderTableExceptCategory();
         let option = document.createElement('option');
         option.text = "בחר מוצר...";
         window.chooseProductName.appendChild(option);
@@ -134,6 +136,8 @@
             newRow.cells[3].innerText = row.cells[3].innerText;
             newRow.cells[4].innerText = window.enterAmount.value;
             newRow.cells[5].innerText = row.cells[5].innerText;
+            let cell = newRow.insertCell(-1);
+            cell.innerHTML = "<td ><input type=\"checkbox\" />&nbsp;</td>";
             window.finalOrders.add(window.productsByBarcode.get(window.barcode_input.value));
             resetOrderTable();
         }
@@ -145,7 +149,14 @@
         }
     }
 
-
+    function deleteSelectedOrders() {
+        for (let row of window.orderSummaryTable.childNodes) {
+            let checkBox = row.cells[-1].getElementsByTagName('input')[0];
+            if (checkBox.checked) {
+                console.log("Found check!")
+            }
+        }
+    }
 
 </script>
 
@@ -211,7 +222,6 @@
     }
 
 
-
 </style>
 <div class='parent'>
     <div class='child inline-block-child'>
@@ -264,17 +274,19 @@
         <th class="tg-6e8n">מחיר ליחידה</th>
         <th class="tg-6e8n">כמות להזמנה</th>
         <th class="tg-6e8n">סה"כ מחיר</th>
+        <th class="tg-6e8n">מחיקה</th>
     </tr>
     </thead>
     <tbody></tbody>
 </table>
+<br>
+<button type="button" id="deleteSelectedOrders" onclick="deleteSelectedOrders()">מחק הזמנות</button>
 <br>
 <button type="button" id="sendOrderBtn" onclick="sendOrder()">בצע הזמנה</button>
 <style type="text/css">
     .inline-block-child {
         display: inline-block;
     }
-
 
 
 </style>
