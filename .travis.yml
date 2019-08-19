@@ -2,4 +2,4 @@ language: java
 sudo: false
 script: mvn clean test -f ./orders/pom.xml
 jdk:
-  - openjdk8
+  - openjdk12
