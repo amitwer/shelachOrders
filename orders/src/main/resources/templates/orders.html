@@ -21,7 +21,7 @@
     function initPage() {
         window.barcode_input = document.getElementById("enterBarcode");
         window.orderTable = document.getElementById("orderTable");
-        window.orderSummeryTable = document.getElementById("orderSummeryTable");
+        window.orderSummaryTable = document.getElementById("orderSummaryTable").getElementsByTagName("tbody")[0];
         window.categories = new Set();
         window.products = [[${orders}]].orders;
         console.log(window.products);
@@ -121,7 +121,7 @@
         if (window.selectDepartmentDropdown.value !== window.selectDepartmentDropdown.options[0].text
             && window.barcode_input.value !== "" && window.enterAmount.value !== "" && window.enterAmount.value > 0) {
             let row = window.orderTable.rows[window.orderTable.rows.length - 1].cloneNode(true);
-            let newRow = window.orderSummeryTable.insertRow();
+            let newRow = window.orderSummaryTable.insertRow();
             newRow.insertCell(0);
             newRow.insertCell(1);
             newRow.insertCell(2);
@@ -144,6 +144,9 @@
             console.log(order);
         }
     }
+
+
+
 </script>
 
 <body onload="initPage()">
@@ -206,10 +209,14 @@
         text-align: left;
         vertical-align: top
     }
+
+
+
 </style>
 <div class='parent'>
     <div class='child inline-block-child'>
         <table class="tg" id="orderTable">
+            <thead>
             <tr>
                 <th class="tg-cscf">מחלקה</th>
                 <th class="tg-6e8n">קוד מוצר</th>
@@ -218,6 +225,8 @@
                 <th class="tg-6e8n">כמות להזמנה</th>
                 <th class="tg-6e8n">סה"כ מחיר</th>
             </tr>
+            </thead>
+            <tbody>
             <tr>
                 <td class="tg-73oq">
                     <label for="selectDepartment"></label><select id="selectDepartment" onchange="departmentSelected()">
@@ -234,6 +243,7 @@
                                                                             onchange="amountChosen()"></td>
                 <td class="tg-0pky"></td>
             </tr>
+            </tbody>
         </table>
     </div>
     <div class='child inline-block-child'>
@@ -241,12 +251,12 @@
     </div>
 </div>
 
-
 <br>
 <br>
 <br>
-<H2>Order Summery</H2>
-<table class="tg" id="orderSummeryTable">
+<H2>Order Summary</H2>
+<table class="tg" id="orderSummaryTable">
+    <thead>
     <tr>
         <th class="tg-cscf">מחלקה</th>
         <th class="tg-6e8n">קוד מוצר</th>
@@ -255,6 +265,8 @@
         <th class="tg-6e8n">כמות להזמנה</th>
         <th class="tg-6e8n">סה"כ מחיר</th>
     </tr>
+    </thead>
+    <tbody></tbody>
 </table>
 <br>
 <button type="button" id="sendOrderBtn" onclick="sendOrder()">בצע הזמנה</button>
@@ -262,6 +274,9 @@
     .inline-block-child {
         display: inline-block;
     }
+
+
+
 </style>
 </body>
 </html>

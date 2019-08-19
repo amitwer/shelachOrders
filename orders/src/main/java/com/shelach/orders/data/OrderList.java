@@ -3,9 +3,7 @@ package com.shelach.orders.data;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -13,10 +11,10 @@ public class OrderList {
     List<Order> orders = new LinkedList<>();
 
     public OrderList(Collection<Order> orders) {
-        this.orders = List.copyOf(orders);
+        this.orders = new ArrayList<>(orders);
     }
 
     public OrderList(Order... orders) {
-        this.orders = List.of(orders);
+        this.orders = Arrays.asList(orders);
     }
 }

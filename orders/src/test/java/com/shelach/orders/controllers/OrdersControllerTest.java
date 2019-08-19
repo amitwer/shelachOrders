@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.util.Lists.list;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -45,7 +46,7 @@ class OrdersControllerTest {
     @Test
     void ordersPageReturnsAllAvailableProductsForCustomer() {
         ExtendedModelMap model = new ExtendedModelMap();
-        List<Order> productsList = List.of(
+        List<Order> productsList = list(
                 new Order("name", "barcode", "category", 1, 12.0),
                 new Order("name2", "barcode2", "category2", 8, 6.2)
 
