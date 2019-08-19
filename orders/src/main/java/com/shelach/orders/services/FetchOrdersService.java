@@ -18,8 +18,8 @@ public class FetchOrdersService {
     public List<Order> getProducts(String customerName) {
         log.info("Fetching products for customer {}", customerName);
         return Arrays.asList(
-                new Order("עגבניות", "TOMATOES", "פירות", 0, 4.3),
-                new Order("מלפפונים", "Cucumbers", "ירקות", 0, 2D)
+                new Order("פירות", "עגבניות", "TOMATOES", 0, 4.3),
+                new Order("ירקות", "מלפפונים", "Cucumbers", 0, 2D)
         );
     }
 }

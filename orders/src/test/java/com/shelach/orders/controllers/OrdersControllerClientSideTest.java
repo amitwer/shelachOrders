@@ -45,10 +45,10 @@ class OrdersControllerClientSideTest {
     private FetchOrdersService fetchOrdersService;
 
     private static Stream<List<Order>> expectedProductsProvider() {
-        return Stream.of(list(new Order("name", "barcode", "category", 6, 12.2)),
+        return Stream.of(list(new Order("category", "name", "barcode", 6, 12.2)),
                 list(
-                        new Order("name1", "barcode1", "category1", 1, 1.1),
-                        new Order("name2", "barcode2", "category2", 2, 2.2)
+                        new Order("category1", "name1", "barcode1", 1, 1.1),
+                        new Order("category2", "name2", "barcode2", 2, 2.2)
                 ));
     }
 
