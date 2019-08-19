@@ -150,10 +150,14 @@
     }
 
     function deleteSelectedOrders() {
-        for (let row of window.orderSummaryTable.childNodes) {
-            let checkBox = row.cells[-1].getElementsByTagName('input')[0];
-            if (checkBox.checked) {
-                console.log("Found check!")
+        console.log("starting delete rows");
+        let i;
+        let rowCount = window.orderSummaryTable.rows.length;
+        for (i = rowCount - 1; i >= 0; i--) {
+            let row = window.orderSummaryTable.rows[i];
+            let chkbox = row.cells[6].getElementsByTagName("input")[0];
+            if (chkbox != null && chkbox.type == 'checkbox' && chkbox.checked === true) {
+                window.orderSummaryTable.deleteRow(i);
             }
         }
     }
