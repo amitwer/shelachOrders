@@ -1,42 +1,43 @@
 <!DOCTYPE html>
 <!--suppress XmlHighlighting -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script type="text/javascript" th:inline="javascript">window.products = [[${orders}]].orders;</script>
 <head>
     <meta charset="UTF-8">
     <title>Order</title>
     <link rel="stylesheet" href="css/orders.css">
 </head>
-<body style="font-family:'David',sans-serif">
+<body style="font-family:'David',sans-serif" onload="initPage()">
 <div style="text-align: center;">
     <H1><span th:text="${username}+' ברוך הבא '"></span></H1>
     <H2>אנא הוסף את המוצרים הרצויים להזמנה</H2>
-    <table class="tg" id="orderTable">
+    <table class="ordersTable" id="orderTable">
         <thead>
         <tr>
-            <th class="tg-cscf">מחלקה</th>
-            <th class="tg-cscf">קוד מוצר</th>
-            <th class="tg-cscf">שם מוצר</th>
-            <th class="tg-cscf">מחיר ליחידה/100 גרם</th>
-            <th class="tg-cscf">כמות להזמנה</th>
-            <th class="tg-cscf">סה"כ מחיר</th>
+            <th class="tableHeader">מחלקה</th>
+            <th class="tableHeader">קוד מוצר</th>
+            <th class="tableHeader">שם מוצר</th>
+            <th class="tableHeader">מחיר ליחידה/100 גרם</th>
+            <th class="tableHeader">כמות להזמנה</th>
+            <th class="tableHeader">סה"כ מחיר</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <td class="tg-0pky">
+            <td class="tableRows">
                 <label for="selectDepartment"></label><select id="selectDepartment" onchange="departmentSelected()">
                 <option>בחר מחלקה...</option>
             </select>
             </td>
-            <td class="tg-0pky"><label for="enterBarcode"></label><input type="text" id="enterBarcode"
-                                                                         onchange="getProductFromBarcode()"></td>
-            <td class="tg-0pky"><label for="chooseProductName"></label><select id="chooseProductName"
-                                                                               onchange="getProductFromName()"></select>
+            <td class="tableRows"><label for="enterBarcode"></label><input type="text" id="enterBarcode"
+                                                                           onchange="getProductFromBarcode()"></td>
+            <td class="tableRows"><label for="chooseProductName"></label><select id="chooseProductName"
+                                                                                 onchange="getProductFromName()"></select>
             </td>
-            <td class="tg-0pky"></td>
-            <td class="tg-0pky"><label for="enterAmount"></label><input type="number" id="enterAmount"
-                                                                        onchange="amountChosen()"></td>
-            <td class="tg-0pky"></td>
+            <td class="tableRows"></td>
+            <td class="tableRows"><label for="enterAmount"></label><input type="number" id="enterAmount"
+                                                                          onchange="amountChosen()"></td>
+            <td class="tableRows"></td>
         </tr>
         </tbody>
     </table>
@@ -47,16 +48,16 @@
     <br>
     <br>
     <H2>Order Summary</H2>
-    <table class="tg" id="orderSummaryTable">
+    <table class="ordersTable" id="orderSummaryTable">
         <thead>
         <tr>
-            <th class="tg-cscf">מחלקה</th>
-            <th class="tg-cscf">קוד מוצר</th>
-            <th class="tg-cscf">שם מוצר</th>
-            <th class="tg-cscf">מחיר ליחידה</th>
-            <th class="tg-cscf">כמות להזמנה</th>
-            <th class="tg-cscf">סה"כ מחיר</th>
-            <th class="tg-cscf">מחיקה</th>
+            <th class="tableHeader">מחלקה</th>
+            <th class="tableHeader">קוד מוצר</th>
+            <th class="tableHeader">שם מוצר</th>
+            <th class="tableHeader">מחיר ליחידה</th>
+            <th class="tableHeader">כמות להזמנה</th>
+            <th class="tableHeader">סה"כ מחיר</th>
+            <th class="tableHeader">מחיקה</th>
         </tr>
         </thead>
         <tbody></tbody>
@@ -66,7 +67,7 @@
     <button type="button" id="deleteSelectedOrders" onclick="deleteSelectedOrders()">מחק הזמנות</button>
     <button type="button" id="sendOrderBtn" onclick="sendOrder()">בצע הזמנה</button>
 </div>
-<script type="text/javascript" th:inline="javascript">window.products = [[${orders}]].orders;</script>
+
 <script type="text/javascript" th:inline="javascript" th:src="@{js/orders.js}"></script>
 </body>
 </html>

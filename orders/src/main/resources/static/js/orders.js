@@ -10,31 +10,31 @@ function removeOptions(selectbox) {
     }
 }
 
-//  initPage
-window.barcode_input = document.getElementById("enterBarcode");
-window.barcode_input.disabled = true;
-window.orderTable = document.getElementById("orderTable");
-window.orderSummaryTable = document.getElementById("orderSummaryTable").getElementsByTagName("tbody")[0];
-window.categories = new Set();
-window.selectDepartmentDropdown = document.getElementById("selectDepartment");
-window.chooseProductName = document.getElementById("chooseProductName");
-window.enterAmount = document.getElementById("enterAmount");
-let i;
-for (i = 0; i < window.products.length; i++) {
-    window.categories = window.categories.add(window.products[i].category)
+function initPage() {
+    window.barcode_input = document.getElementById("enterBarcode");
+    window.barcode_input.disabled = true;
+    window.orderTable = document.getElementById("orderTable");
+    window.orderSummaryTable = document.getElementById("orderSummaryTable").getElementsByTagName("tbody")[0];
+    window.categories = new Set();
+    window.selectDepartmentDropdown = document.getElementById("selectDepartment");
+    window.chooseProductName = document.getElementById("chooseProductName");
+    window.enterAmount = document.getElementById("enterAmount");
+    let i;
+    for (i = 0; i < window.products.length; i++) {
+        window.categories = window.categories.add(window.products[i].category)
+    }
+    for (let val of window.categories) {
+        window.productsByCategory.set(val, new Set());
+        let option = document.createElement('option');
+        option.text = val;
+        window.selectDepartmentDropdown.appendChild(option);
+    }
+    for (let product of window.products) {
+        window.productsByCategory.get(product.category).add(product);
+        window.productsByName.set(product.name, product);
+        window.productsByBarcode.set(product.barcode, product);
+    }
 }
-for (let val of window.categories) {
-    window.productsByCategory.set(val, new Set());
-    let option = document.createElement('option');
-    option.text = val;
-    window.selectDepartmentDropdown.appendChild(option);
-}
-for (let product of window.products) {
-    window.productsByCategory.get(product.category).add(product);
-    window.productsByName.set(product.name, product);
-    window.productsByBarcode.set(product.barcode, product);
-}
-
 function updateOrderTableInfoFromProduct(product) {
     let row = window.orderTable.rows[window.orderTable.rows.length - 1];
     this.selectDepartmentDropdown.value = product.category;

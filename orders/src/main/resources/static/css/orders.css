@@ -1,12 +1,12 @@
-.tg {
+.ordersTable {
     border-collapse: collapse;
     border-spacing: 0;
 }
 
-.tg td {
+.ordersTable td {
     font-family: David, sans-serif;
-    font-size: 14px;
-    padding: 10px 5px;
+    font-size: 1em;
+    padding: 1em 0.5em;
     border-style: solid;
     border-width: 1px;
     overflow: hidden;
@@ -15,11 +15,11 @@
     text-anchor: middle;
 }
 
-.tg th {
+.ordersTable th {
     font-family: David, sans-serif;
-    font-size: 14px;
+    font-size: 1em;
     font-weight: normal;
-    padding: 10px 5px;
+    padding: 1em 0.5em;
     border-style: solid;
     border-width: 1px;
     overflow: hidden;
@@ -28,7 +28,7 @@
     text-anchor: middle;
 }
 
-.tg .tg-cscf {
+.ordersTable .tableHeader {
     font-weight: bold;
     background-color: #c0c0c0;
     border-color: #000000;
@@ -37,7 +37,7 @@
 }
 
 
-.tg .tg-0pky {
+.ordersTable .tableRows {
     border-color: inherit;
     text-align: center;
     vertical-align: middle;
@@ -54,5 +54,5 @@
 }
 
 #chooseProductName {
-    min-width: 100px;
+    min-width: 10em;
 }
