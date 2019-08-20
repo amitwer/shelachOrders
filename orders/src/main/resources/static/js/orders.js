@@ -13,7 +13,7 @@ function removeOptions(selectbox) {
 function initPage() {
     window.barcode_input = document.getElementById("enterBarcode");
     window.barcode_input.disabled = true;
-    window.orderTable = document.getElementById("orderTable");
+    window.orderForm = document.getElementById("orderTable");
     window.orderSummaryTable = document.getElementById("orderSummaryTable").getElementsByTagName("tbody")[0];
     window.categories = new Set();
     window.selectDepartmentDropdown = document.getElementById("selectDepartment");
@@ -35,8 +35,9 @@ function initPage() {
         window.productsByBarcode.set(product.barcode, product);
     }
 }
-function updateOrderTableInfoFromProduct(product) {
-    let row = window.orderTable.rows[window.orderTable.rows.length - 1];
+
+function updateOrderFormInfoFromProduct(product) {
+    let row = window.orderForm.rows[window.orderForm.rows.length - 1];
     this.selectDepartmentDropdown.value = product.category;
     let option = document.createElement('option');
     option.text = product.name;
@@ -46,8 +47,8 @@ function updateOrderTableInfoFromProduct(product) {
     row.cells[5].innerText = "0";
 }
 
-function clearOrderTableExceptCategory() {
-    let row = window.orderTable.rows[window.orderTable.rows.length - 1];
+function clearProductFromOrderFormExceptCategory() {
+    let row = window.orderForm.rows[window.orderForm.rows.length - 1];
     row.cells[3].innerText = "";
     window.barcode_input.value = "";
     row.cells[5].innerText = "";
@@ -57,24 +58,24 @@ function clearOrderTableExceptCategory() {
 function getProductFromName() {
     if (window.productsByName.has(window.chooseProductName.value)) {
         let product = window.productsByName.get(window.chooseProductName.value);
-        updateOrderTableInfoFromProduct(product);
+        updateOrderFormInfoFromProduct(product);
     } else {
-        clearOrderTableExceptCategory();
+        clearProductFromOrderFormExceptCategory();
     }
 }
 
 function getProductFromBarcode() {
     if (window.productsByBarcode.has(window.barcode_input.value)) {
         let product = window.productsByBarcode.get(window.barcode_input.value);
-        updateOrderTableInfoFromProduct(product);
+        updateOrderFormInfoFromProduct(product);
     } else {
-        clearOrderTableExceptCategory();
+        clearProductFromOrderFormExceptCategory();
         window.chooseProductName.selectedIndex = 0;
     }
 }
 
 function amountChosen() {
-    let row = window.orderTable.rows[window.orderTable.rows.length - 1];
+    let row = window.orderForm.rows[window.orderForm.rows.length - 1];
     row.cells[5].innerText = (parseFloat(row.cells[3].innerText) * document.getElementById("enterAmount").value);
 }
 
@@ -83,7 +84,7 @@ function departmentSelected() {
     for (i = window.chooseProductName.length - 1; i >= 0; i--) {
         window.chooseProductName.removeChild(window.chooseProductName.lastChild)
     }
-    clearOrderTableExceptCategory();
+    clearProductFromOrderFormExceptCategory();
     let option = document.createElement('option');
     option.text = "בחר מוצר...";
     window.chooseProductName.appendChild(option);
@@ -98,8 +99,8 @@ function departmentSelected() {
     }
 }
 
-function resetOrderTable() {
-    let row = window.orderTable.rows[window.orderTable.rows.length - 1];
+function clearProductFromOrderForm() {
+    let row = window.orderForm.rows[window.orderForm.rows.length - 1];
     window.selectDepartmentDropdown.value = window.selectDepartmentDropdown.options[0].text;
     window.barcode_input.value = "";
     removeOptions(window.chooseProductName);
@@ -111,7 +112,7 @@ function resetOrderTable() {
 function addProduct() {
     if (window.selectDepartmentDropdown.value !== window.selectDepartmentDropdown.options[0].text
         && window.barcode_input.value !== "" && window.enterAmount.value !== "" && window.enterAmount.value > 0) {
-        let row = window.orderTable.rows[window.orderTable.rows.length - 1].cloneNode(true);
+        let row = window.orderForm.rows[window.orderForm.rows.length - 1].cloneNode(true);
         let newRow = window.orderSummaryTable.insertRow();
         newRow.insertCell(0);
         newRow.insertCell(1);
@@ -128,7 +129,7 @@ function addProduct() {
         let cell = newRow.insertCell(-1);
         cell.innerHTML = "<td ><input type=\"checkbox\" />&nbsp;</td>";
         window.finalOrders.add(window.productsByBarcode.get(window.barcode_input.value));
-        resetOrderTable();
+        clearProductFromOrderForm();
     }
 }
 

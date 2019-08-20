@@ -85,7 +85,7 @@ class OrdersControllerClientSideTest {
     private void verifyOrdersTable(List<Order> expectedList, MvcResult mvcResult) throws UnsupportedEncodingException {
         String rawHtml = mvcResult.getResponse().getContentAsString();
         Document parsedHtml = Jsoup.parse(rawHtml);
-        Element ordersTable = parsedHtml.body().getElementById("orderTable");
+        Element ordersTable = parsedHtml.body().getElementById("orderForm");
         assertThat(ordersTable).isNotNull();
         verifyOrdersTableHeader(ordersTable);
         verifyOrdersTableBody(ordersTable, expectedList);
