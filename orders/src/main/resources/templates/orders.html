@@ -4,295 +4,69 @@
 <head>
     <meta charset="UTF-8">
     <title>Order</title>
+    <link rel="stylesheet" href="css/orders.css">
 </head>
-<script type="text/javascript" th:inline="javascript">
-    window.productsByName = new Map();
-    window.productsByBarcode = new Map();
-    window.productsByCategory = new Map();
-    window.finalOrders = new Set();
-
-    function removeOptions(selectbox) {
-        var i;
-        for (i = selectbox.options.length - 1; i >= 0; i--) {
-            selectbox.remove(i);
-        }
-    }
-
-    function initPage() {
-        window.barcode_input = document.getElementById("enterBarcode");
-        window.barcode_input.disabled = true;
-        window.orderTable = document.getElementById("orderTable");
-        window.orderSummaryTable = document.getElementById("orderSummaryTable").getElementsByTagName("tbody")[0];
-        window.categories = new Set();
-        window.products = [[${orders}]].orders;
-        console.log(window.products);
-        window.selectDepartmentDropdown = document.getElementById("selectDepartment");
-        window.chooseProductName = document.getElementById("chooseProductName");
-        window.enterAmount = document.getElementById("enterAmount");
-        let i;
-        for (i = 0; i < window.products.length; i++) {
-            window.categories = window.categories.add(window.products[i].category)
-        }
-        for (let val of window.categories) {
-            window.productsByCategory.set(val, new Set());
-            let option = document.createElement('option');
-            option.text = val;
-            window.selectDepartmentDropdown.appendChild(option);
-        }
-        for (let product of window.products) {
-            window.productsByCategory.get(product.category).add(product);
-            window.productsByName.set(product.name, product);
-            window.productsByBarcode.set(product.barcode, product);
-        }
-    }
-
-    function updateOrderTableInfoFromProduct(product) {
-        let row = window.orderTable.rows[window.orderTable.rows.length - 1];
-        this.selectDepartmentDropdown.value = product.category;
-        let option = document.createElement('option');
-        option.text = product.name;
-        window.chooseProductName.appendChild(option);
-        row.cells[3].innerText = product.price;
-        window.barcode_input.value = product.barcode;
-        row.cells[5].innerText = "0";
-    }
-
-    function clearOrderTableExceptCategory() {
-        let row = window.orderTable.rows[window.orderTable.rows.length - 1];
-        row.cells[3].innerText = "";
-        window.barcode_input.value = "";
-        row.cells[5].innerText = "";
-        window.chooseProductName.value = "";
-    }
-
-    function getProductFromName() {
-        if (window.productsByName.has(window.chooseProductName.value)) {
-            let product = window.productsByName.get(window.chooseProductName.value);
-            updateOrderTableInfoFromProduct(product);
-        } else {
-            clearOrderTableExceptCategory();
-        }
-    }
-
-    function getProductFromBarcode() {
-        if (window.productsByBarcode.has(window.barcode_input.value)) {
-            let product = window.productsByBarcode.get(window.barcode_input.value);
-            updateOrderTableInfoFromProduct(product);
-        } else {
-            clearOrderTableExceptCategory();
-            window.chooseProductName.selectedIndex = 0;
-        }
-    }
-
-    function amountChosen() {
-        let row = window.orderTable.rows[window.orderTable.rows.length - 1];
-        row.cells[5].innerText = (parseFloat(row.cells[3].innerText) * document.getElementById("enterAmount").value);
-    }
-
-    function departmentSelected() {
-        let i;
-        for (i = window.chooseProductName.length - 1; i >= 0; i--) {
-            window.chooseProductName.removeChild(window.chooseProductName.lastChild)
-        }
-        clearOrderTableExceptCategory();
-        let option = document.createElement('option');
-        option.text = "בחר מוצר...";
-        window.chooseProductName.appendChild(option);
-        for (let [category, productSet] of window.productsByCategory) {
-            if (window.selectDepartmentDropdown.value === category) {
-                for (let product of productSet) {
-                    let option = document.createElement('option');
-                    option.text = product.name;
-                    window.chooseProductName.appendChild(option);
-                }
-            }
-        }
-    }
-
-    function resetOrderTable() {
-        let row = window.orderTable.rows[window.orderTable.rows.length - 1];
-        window.selectDepartmentDropdown.value = window.selectDepartmentDropdown.options[0].text;
-        window.barcode_input.value = "";
-        removeOptions(window.chooseProductName);
-        window.enterAmount.value = "";
-        row.cells[3].innerText = "";
-        row.cells[5].innerText = "";
-    }
-
-    function addProduct() {
-        if (window.selectDepartmentDropdown.value !== window.selectDepartmentDropdown.options[0].text
-            && window.barcode_input.value !== "" && window.enterAmount.value !== "" && window.enterAmount.value > 0) {
-            let row = window.orderTable.rows[window.orderTable.rows.length - 1].cloneNode(true);
-            let newRow = window.orderSummaryTable.insertRow();
-            newRow.insertCell(0);
-            newRow.insertCell(1);
-            newRow.insertCell(2);
-            newRow.insertCell(3);
-            newRow.insertCell(4);
-            newRow.insertCell(5);
-            newRow.cells[0].innerText = window.selectDepartmentDropdown.value;
-            newRow.cells[1].innerText = window.barcode_input.value;
-            newRow.cells[2].innerText = window.chooseProductName.value;
-            newRow.cells[3].innerText = row.cells[3].innerText;
-            newRow.cells[4].innerText = window.enterAmount.value;
-            newRow.cells[5].innerText = row.cells[5].innerText;
-            let cell = newRow.insertCell(-1);
-            cell.innerHTML = "<td ><input type=\"checkbox\" />&nbsp;</td>";
-            window.finalOrders.add(window.productsByBarcode.get(window.barcode_input.value));
-            resetOrderTable();
-        }
-    }
-
-    function sendOrder() {
-        for (let order of window.finalOrders) {
-            console.log(order);
-        }
-    }
-
-    function deleteSelectedOrders() {
-        console.log("starting delete rows");
-        let i;
-        let rowCount = window.orderSummaryTable.rows.length;
-        for (i = rowCount - 1; i >= 0; i--) {
-            let row = window.orderSummaryTable.rows[i];
-            let chkbox = row.cells[6].getElementsByTagName("input")[0];
-            if (chkbox != null && chkbox.type == 'checkbox' && chkbox.checked === true) {
-                window.orderSummaryTable.deleteRow(i);
-            }
-        }
-    }
-
-</script>
-
-<body onload="initPage()">
-
-<H1><span th:text="${username}+' ברוך הבא '"></span></H1>
-<H2>אנא הוסף את המוצרים הרצויים להזמנה</H2>
-<style type="text/css">
-    .tg {
-        border-collapse: collapse;
-        border-spacing: 0;
-    }
-
-    .tg td {
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-        padding: 10px 5px;
-        border-style: solid;
-        border-width: 1px;
-        overflow: hidden;
-        word-break: normal;
-        border-color: black;
-    }
-
-    .tg th {
-        font-family: Arial, sans-serif;
-        font-size: 14px;
-        font-weight: normal;
-        padding: 10px 5px;
-        border-style: solid;
-        border-width: 1px;
-        overflow: hidden;
-        word-break: normal;
-        border-color: black;
-    }
-
-    .tg .tg-cscf {
-        font-weight: bold;
-        background-color: #c0c0c0;
-        border-color: #000000;
-        text-align: left;
-        vertical-align: top
-    }
-
-    .tg .tg-6e8n {
-        font-weight: bold;
-        background-color: #c0c0c0;
-        border-color: inherit;
-        text-align: left;
-        vertical-align: top
-    }
-
-    .tg .tg-73oq {
-        border-color: #000000;
-        text-align: left;
-        vertical-align: top
-    }
-
-    .tg .tg-0pky {
-        border-color: inherit;
-        text-align: left;
-        vertical-align: top
-    }
-
-
-</style>
-<div class='parent'>
-    <div class='child inline-block-child'>
-        <table class="tg" id="orderTable">
-            <thead>
-            <tr>
-                <th class="tg-cscf">מחלקה</th>
-                <th class="tg-6e8n">קוד מוצר</th>
-                <th class="tg-6e8n">שם מוצר</th>
-                <th class="tg-6e8n">מחיר ליחידה/100 גרם</th>
-                <th class="tg-6e8n">כמות להזמנה</th>
-                <th class="tg-6e8n">סה"כ מחיר</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td class="tg-73oq">
-                    <label for="selectDepartment"></label><select id="selectDepartment" onchange="departmentSelected()">
-                    <option>בחר מחלקה...</option>
-                </select>
-                </td>
-                <td class="tg-0pky"><label for="enterBarcode"></label><input type="text" id="enterBarcode"
-                                                                             onchange="getProductFromBarcode()"></td>
-                <td class="tg-0pky"><label for="chooseProductName"></label><select id="chooseProductName"
-                                                                                   onchange="getProductFromName()"></select>
-                </td>
-                <td class="tg-0pky"></td>
-                <td class="tg-0pky"><label for="enterAmount"></label><input type="number" id="enterAmount"
-                                                                            onchange="amountChosen()"></td>
-                <td class="tg-0pky"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class='child inline-block-child'>
-        <button id="addProductBtn" onclick="addProduct()" style="float:bottom">+</button>
-    </div>
+<body style="font-family:'David',sans-serif">
+<div style="text-align: center;">
+    <H1><span th:text="${username}+' ברוך הבא '"></span></H1>
+    <H2>אנא הוסף את המוצרים הרצויים להזמנה</H2>
+    <table class="tg" id="orderTable">
+        <thead>
+        <tr>
+            <th class="tg-cscf">מחלקה</th>
+            <th class="tg-cscf">קוד מוצר</th>
+            <th class="tg-cscf">שם מוצר</th>
+            <th class="tg-cscf">מחיר ליחידה/100 גרם</th>
+            <th class="tg-cscf">כמות להזמנה</th>
+            <th class="tg-cscf">סה"כ מחיר</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="tg-0pky">
+                <label for="selectDepartment"></label><select id="selectDepartment" onchange="departmentSelected()">
+                <option>בחר מחלקה...</option>
+            </select>
+            </td>
+            <td class="tg-0pky"><label for="enterBarcode"></label><input type="text" id="enterBarcode"
+                                                                         onchange="getProductFromBarcode()"></td>
+            <td class="tg-0pky"><label for="chooseProductName"></label><select id="chooseProductName"
+                                                                               onchange="getProductFromName()"></select>
+            </td>
+            <td class="tg-0pky"></td>
+            <td class="tg-0pky"><label for="enterAmount"></label><input type="number" id="enterAmount"
+                                                                        onchange="amountChosen()"></td>
+            <td class="tg-0pky"></td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <button id="addProductBtn" onclick="addProduct()">הוסף להזמנה</button>
+    <br>
+    <br>
+    <br>
+    <H2>Order Summary</H2>
+    <table class="tg" id="orderSummaryTable">
+        <thead>
+        <tr>
+            <th class="tg-cscf">מחלקה</th>
+            <th class="tg-cscf">קוד מוצר</th>
+            <th class="tg-cscf">שם מוצר</th>
+            <th class="tg-cscf">מחיר ליחידה</th>
+            <th class="tg-cscf">כמות להזמנה</th>
+            <th class="tg-cscf">סה"כ מחיר</th>
+            <th class="tg-cscf">מחיקה</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br>
+    <br>
+    <button type="button" id="deleteSelectedOrders" onclick="deleteSelectedOrders()">מחק הזמנות</button>
+    <button type="button" id="sendOrderBtn" onclick="sendOrder()">בצע הזמנה</button>
 </div>
-
-<br>
-<br>
-<br>
-<H2>Order Summary</H2>
-<table class="tg" id="orderSummaryTable">
-    <thead>
-    <tr>
-        <th class="tg-cscf">מחלקה</th>
-        <th class="tg-6e8n">קוד מוצר</th>
-        <th class="tg-6e8n">שם מוצר</th>
-        <th class="tg-6e8n">מחיר ליחידה</th>
-        <th class="tg-6e8n">כמות להזמנה</th>
-        <th class="tg-6e8n">סה"כ מחיר</th>
-        <th class="tg-6e8n">מחיקה</th>
-    </tr>
-    </thead>
-    <tbody></tbody>
-</table>
-<br>
-<button type="button" id="deleteSelectedOrders" onclick="deleteSelectedOrders()">מחק הזמנות</button>
-<br>
-<button type="button" id="sendOrderBtn" onclick="sendOrder()">בצע הזמנה</button>
-<style type="text/css">
-    .inline-block-child {
-        display: inline-block;
-    }
-
-
-</style>
+<script type="text/javascript" th:inline="javascript">window.products = [[${orders}]].orders;</script>
+<script type="text/javascript" th:inline="javascript" th:src="@{js/orders.js}"></script>
 </body>
 </html>

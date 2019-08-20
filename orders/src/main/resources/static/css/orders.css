@@ -1,0 +1,58 @@
+.tg {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.tg td {
+    font-family: David, sans-serif;
+    font-size: 14px;
+    padding: 10px 5px;
+    border-style: solid;
+    border-width: 1px;
+    overflow: hidden;
+    word-break: normal;
+    border-color: black;
+    text-anchor: middle;
+}
+
+.tg th {
+    font-family: David, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px 5px;
+    border-style: solid;
+    border-width: 1px;
+    overflow: hidden;
+    word-break: normal;
+    border-color: black;
+    text-anchor: middle;
+}
+
+.tg .tg-cscf {
+    font-weight: bold;
+    background-color: #c0c0c0;
+    border-color: #000000;
+    text-align: center;
+    vertical-align: middle
+}
+
+
+.tg .tg-0pky {
+    border-color: inherit;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#deleteSelectedOrders, #sendOrderBtn, #orderTable, #orderSummaryTable {
+    display: inline-block;
+}
+
+#selectDepartment, #sendOrderBtn, #chooseProductName, #enterBarcode, #deleteSelectedOrders, #enterAmount, #addProductBtn {
+    text-align: center;
+    vertical-align: center;
+    font-family: David, sans-serif;
+}
+
+#chooseProductName {
+    min-width: 100px;
+}
