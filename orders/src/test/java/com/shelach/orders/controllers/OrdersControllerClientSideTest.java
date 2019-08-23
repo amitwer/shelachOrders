@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,17 +79,48 @@ class OrdersControllerClientSideTest {
         when(fetchOrdersService.getProducts(any())).thenReturn(expectedProducts);
         MvcResult mvcResult = mvc.perform(get("").with(csrf())).andReturn();
         verifyOrdersTable(expectedProducts, mvcResult);
+        verifyOrdersSummeryTable(expectedProducts, mvcResult);
+    }
 
-
+    private void verifyOrdersSummeryTable(List<Order> expectedProducts, MvcResult mvcResult) throws UnsupportedEncodingException {
+        String rawHtml = mvcResult.getResponse().getContentAsString();
+        Document parsedHtml = Jsoup.parse(rawHtml);
+        Element orderSummeryTAble = parsedHtml.body().getElementById("orderSummaryTable");
+        Elements thead = orderSummeryTAble.getElementsByTag("thead");
+        assertThat(thead).isNotNull().hasSize(1);
+        List<String> headerTexts = thead.get(0).getElementsByTag("th").stream().map(Element::text)
+                .collect(Collectors.toList());
+        assertThat(headerTexts).isEqualTo(list("מחלקה", "קוד מוצר", "שם מוצר", "מחיר ליחידה/100 גרם", "כמות להזמנה", "סה\"כ מחיר", "מחיקה"));
     }
 
     private void verifyOrdersTable(List<Order> expectedList, MvcResult mvcResult) throws UnsupportedEncodingException {
         String rawHtml = mvcResult.getResponse().getContentAsString();
         Document parsedHtml = Jsoup.parse(rawHtml);
-        Element ordersTable = parsedHtml.body().getElementById("orderForm");
+        Element ordersTable = parsedHtml.body().getElementById("orderTable");
         assertThat(ordersTable).isNotNull();
+        verifySelectDepartment(expectedList, mvcResult);
         verifyOrdersTableHeader(ordersTable);
         verifyOrdersTableBody(ordersTable, expectedList);
+    }
+
+
+    private void verifySelectDepartment(List<Order> expectedList, MvcResult mvcResult) throws UnsupportedEncodingException {
+        HashSet<String> categories = new HashSet<>();
+        for (Order order : expectedList) {
+            categories.add(order.getCategory());
+        }
+        categories.add("בחר מחלקה...");
+        HashSet<String> selectCategories = new HashSet<>();
+        String rawHtml = mvcResult.getResponse().getContentAsString();
+        Document parsedHtml = Jsoup.parse(rawHtml);
+        Element selectDepartment = parsedHtml.body().getElementById("selectDepartment");
+        for (Element child : selectDepartment.children()) {
+            assertThat(categories.contains(child.text()));
+            selectCategories.add(child.text());
+        }
+        for (String category : categories) {
+            assertThat(selectCategories.contains(category));
+        }
     }
 
     private void verifyOrdersTableBody(Element ordersTable, List<Order> expectedList) {
