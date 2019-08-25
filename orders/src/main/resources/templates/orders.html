@@ -1,39 +1,73 @@
 <!DOCTYPE html>
 <!--suppress XmlHighlighting -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script type="text/javascript" th:inline="javascript">window.products = [[${orders}]].orders;</script>
 <head>
     <meta charset="UTF-8">
     <title>Order</title>
+    <link rel="stylesheet" href="css/orders.css">
 </head>
-<body>
-<H1><span th:text="'Welcome '+${username}+' to the ordering page'"></span></H1>
-<H2>please place your order here</H2>
-
-
-<form action="#" th:action="@{/order}" th:object="${orders}" method="post">
-    <table id="orders_table">
+<body style="font-family:'David',sans-serif" onload="initPage()">
+<div style="text-align: center;">
+    <H1><span th:text="${username}+' ברוך הבא '"></span></H1>
+    <H2>אנא הוסף את המוצרים הרצויים להזמנה</H2>
+    <table class="ordersTable" id="orderTable">
         <thead>
         <tr>
-            <th>מוצר</th>
-            <th>ברקוד</th>
-            <th>מחיר ליחידה</th>
-            <th>כמות</th>
+            <th class="tableHeader">מחלקה</th>
+            <th class="tableHeader">קוד מוצר</th>
+            <th class="tableHeader">שם מוצר</th>
+            <th class="tableHeader">מחיר ליחידה/100 גרם</th>
+            <th class="tableHeader">כמות להזמנה</th>
+            <th class="tableHeader">סה"כ מחיר</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="order, itemStat : *{orders}">
-            <input type="hidden" th:field="*{orders[__${itemStat.index}__].name}">
-            <input type="hidden" th:field="*{orders[__${itemStat.index}__].barcode}">
-            <input type="hidden" th:field="*{orders[__${itemStat.index}__].price}">
-            <td th:text="*{orders[__${itemStat.index}__].name}"></td>
-            <td th:text="*{orders[__${itemStat.index}__].barcode}"></td>
-            <td th:text="*{orders[__${itemStat.index}__].price}"></td>
-            <td><input th:field="*{orders[__${itemStat.index}__].quantity}"></td>
+        <tr>
+            <td class="tableRows">
+                <label for="selectDepartment"></label><select id="selectDepartment" onchange="departmentSelected()">
+                <option>בחר מחלקה...</option>
+            </select>
+            </td>
+            <td class="tableRows"><label for="enterBarcode"></label><input type="text" id="enterBarcode"
+                                                                           onchange="getProductFromBarcode()"></td>
+            <td class="tableRows"><label for="chooseProductName"></label><select id="chooseProductName"
+                                                                                 onchange="getProductFromName()"></select>
+            </td>
+            <td class="tableRows"></td>
+            <td class="tableRows"><label for="enterAmount"></label><input type="number" id="enterAmount"
+                                                                          onchange="amountChosen()"></td>
+            <td class="tableRows"></td>
         </tr>
         </tbody>
     </table>
-    <input type="submit"/>
-</form>
+    <br>
+    <br>
+    <button id="addProductBtn" onclick="addProduct()">הוסף להזמנה</button>
+    <br>
+    <br>
+    <br>
+    <H2>Order Summary</H2>
+    <table class="ordersTable" id="orderSummaryTable">
+        <thead>
+        <tr>
+            <th class="tableHeader">מחלקה</th>
+            <th class="tableHeader">קוד מוצר</th>
+            <th class="tableHeader">שם מוצר</th>
+            <th class="tableHeader">מחיר ליחידה/100 גרם</th>
+            <th class="tableHeader">כמות להזמנה</th>
+            <th class="tableHeader">סה"כ מחיר</th>
+            <th class="tableHeader">מחיקה</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br>
+    <br>
+    <button type="button" id="deleteSelectedOrders" onclick="deleteSelectedOrders()">מחק הזמנות</button>
+    <button type="button" id="sendOrderBtn" onclick="sendOrder()">בצע הזמנה</button>
+</div>
 
+<script type="text/javascript" th:inline="javascript" th:src="@{js/orders.js}"></script>
 </body>
 </html>
