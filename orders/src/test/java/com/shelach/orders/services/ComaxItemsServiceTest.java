@@ -15,8 +15,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -57,8 +58,10 @@ class ComaxItemsServiceTest {
         verify(restTemplateMock, times(1)).getForEntity(paramsCaptor.capture(), any());
         UriComponents components = UriComponentsBuilder.fromUriString(paramsCaptor.getValue()).build();
         MultiValueMap<String, String> queryParams = components.getQueryParams();
-        assertThat(queryParams.toSingleValueMap()).containsAllEntriesOf(Map.of("LoginID", comaxCredentialsProvider.getUsername(),
-                "LoginPassword", comaxCredentialsProvider.getLoginPassword()));
+        assertThat(queryParams.toSingleValueMap()).containsAllEntriesOf(new HashMap<String, String>() {{
+            put("LoginID", comaxCredentialsProvider.getUsername());
+            put("LoginPassword", comaxCredentialsProvider.getLoginPassword());
+        }});
     }
 
     @Test
@@ -67,7 +70,7 @@ class ComaxItemsServiceTest {
         verify(restTemplateMock, times(1)).getForEntity(paramsCaptor.capture(), any());
         UriComponents components = UriComponentsBuilder.fromUriString(paramsCaptor.getValue()).build();
         MultiValueMap<String, String> queryParams = components.getQueryParams();
-        assertThat(queryParams.toSingleValueMap()).containsAllEntriesOf(Map.of("StoreID", "1"));
+        assertThat(queryParams.toSingleValueMap()).containsAllEntriesOf(Collections.singletonMap("StoreID", "1"));
     }
 
     @Test

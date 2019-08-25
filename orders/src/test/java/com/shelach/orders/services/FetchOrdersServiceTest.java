@@ -14,7 +14,7 @@ class FetchOrdersServiceTest {
     @Test
     void fetchOrdersCallsComax() {
         ComaxItemsService comaxItemsService = mock(ComaxItemsService.class);
-        List<Order> expectedOrders = Lists.list(new Order("name", "barcode", 0, 7.9));
+        List<Order> expectedOrders = Lists.list(new Order("category","name", "barcode", 0, 7.9));
         when(comaxItemsService.getAllProducts()).thenReturn(expectedOrders);
         List<Order> orders = new FetchOrdersService(comaxItemsService).getProducts("dummy");
         assertThat(orders).isEqualTo(expectedOrders);
