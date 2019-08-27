@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ExtendedModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ class OrdersController {
     }
 
     @SuppressWarnings("SameReturnValue")
-    @RequestMapping("")
+    @GetMapping("")
     public String mainPage(ExtendedModelMap model) {
         log.info("Building orders page");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -33,6 +33,7 @@ class OrdersController {
         List<Order> orders = fetchOrdersService.getProducts(username);
         log.info("Orders page ready for user <{}>", username);
         OrderList orderList = new OrderList(orders);
+
         model.addAttribute("orders", orderList);
         return "orders";
     }

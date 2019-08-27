@@ -4,7 +4,6 @@ import com.shelach.orders.data.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,11 +14,14 @@ import java.util.List;
 @Service
 @Slf4j
 public class FetchOrdersService {
+    private final ComaxItemsService comaxItemsService;
+
+    public FetchOrdersService(ComaxItemsService comaxItemsService) {
+        this.comaxItemsService = comaxItemsService;
+    }
+
     public List<Order> getProducts(String customerName) {
         log.info("Fetching products for customer {}", customerName);
-        return Arrays.asList(
-                new Order("פירות", "עגבניות", "TOMATOES", 0, 4.3),
-                new Order("ירקות", "מלפפונים", "Cucumbers", 0, 2D)
-        );
+        return comaxItemsService.getAllProducts();
     }
 }
