@@ -145,7 +145,7 @@ import java.math.BigDecimal;
  * &lt;/complexType>
  * </pre>
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ClsItems")
 @Data
@@ -161,7 +161,7 @@ public class ClsItemsType {
     @XmlElement(name = "OldID", namespace = "http://ws.comax.co.il/Comax_WebServices/")
     protected int oldID;
     @XmlElement(name = "Barcode", namespace = "http://ws.comax.co.il/Comax_WebServices/")
-    protected int barcode;
+    protected String barcode;
     @XmlElement(name = "PurchasingAccountID", namespace = "http://ws.comax.co.il/Comax_WebServices/")
     protected int purchasingAccountID;
     @XmlElement(name = "SalesAccountID", namespace = "http://ws.comax.co.il/Comax_WebServices/")
@@ -375,7 +375,8 @@ public class ClsItemsType {
     @XmlElement(name = "QtyType", required = true, namespace = "http://ws.comax.co.il/Comax_WebServices/")
     protected String qtyType;
 
-    public ClsItemsType(int barcode, String name, double price) {
+    public ClsItemsType(String category, String barcode, String name, double price) {
+        this.department = category;
         this.supplierPrice = BigDecimal.valueOf(price);
         this.barcode = barcode;
         this.name = name;
@@ -452,14 +453,14 @@ public class ClsItemsType {
     /**
      * Gets the value of the barcode property.
      */
-    public int getBarcode() {
+    public String getBarcode() {
         return barcode;
     }
 
     /**
      * Sets the value of the barcode property.
      */
-    public void setBarcode(int value) {
+    public void setBarcode(String value) {
         this.barcode = value;
     }
 

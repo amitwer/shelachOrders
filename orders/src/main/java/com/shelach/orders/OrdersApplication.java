@@ -20,9 +20,4 @@ public class OrdersApplication {
     }
 
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
 }

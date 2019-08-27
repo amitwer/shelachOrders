@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +77,7 @@ class ComaxItemsServiceTest {
     @Test
     void itemsServiceTranslatesComaxResponseToOrder() {
         ArrayOfClsItemsType arrayOfClsItemsType = new ArrayOfClsItemsType();
-        arrayOfClsItemsType.getClsItems().add(new ClsItemsType(11, "name", 7.2));
+        arrayOfClsItemsType.getClsItems().add(new ClsItemsType("category", "Barcode", "name", 7.2));
         when(mockRestResponse.getBody()).thenReturn(arrayOfClsItemsType);
         List<Order> allProducts = comaxItemsService.getAllProducts();
         assertThat(allProducts).hasSize(arrayOfClsItemsType.getClsItems().size());
@@ -87,5 +88,33 @@ class ComaxItemsServiceTest {
                     .hasFieldOrPropertyWithValue("name", item.getName())
                     .hasFieldOrPropertyWithValue("price", item.getSupplierPrice().doubleValue());
         }
+    }
+
+    @Test
+    void itemsServiceFilterProductsWithoutPrice() {
+        when(mockRestResponse.getBody()).thenReturn(createComaxItemsResponse(new ClsItemsType("category", "barcode", "name", 0)));
+        assertThat(comaxItemsService.getAllProducts()).isEmpty();
+    }
+
+    @Test
+    void itemsServiceFilterDuplicates() {
+        when(mockRestResponse.getBody()).thenReturn(createComaxItemsResponse(
+                new ClsItemsType("category", "Barcode", "name", 7),
+                new ClsItemsType("category", "Barcode", "name", 7)
+        ));
+        assertThat(comaxItemsService.getAllProducts()).hasSize(1);
+    }
+
+
+    @Test
+    void removesDuplicates() {
+        when(mockRestResponse.getBody()).thenReturn(createComaxItemsResponse(new ClsItemsType("category", "Barcode", "name", 0)));
+        assertThat(comaxItemsService.getAllProducts()).isEmpty();
+    }
+
+    private ArrayOfClsItemsType createComaxItemsResponse(ClsItemsType... items) {
+        ArrayOfClsItemsType arrayOfClsItemsType = new ArrayOfClsItemsType();
+        arrayOfClsItemsType.setClsItems(Arrays.asList(items));
+        return arrayOfClsItemsType;
     }
 }

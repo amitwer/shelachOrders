@@ -40,7 +40,11 @@ public class ComaxItemsService {
             ArrayOfClsItemsType items = response.getBody();
             itemList = Optional.ofNullable(items).map(ArrayOfClsItemsType::getClsItems).orElse(new LinkedList<>());
         }
-        return itemList.stream().map(item -> new Order(item.getDepartment(), item.getName(), "" + item.getBarcode(), 0, item.getSupplierPrice().doubleValue())).collect(Collectors.toList());
+        return itemList.stream()
+                .filter(item -> item.getSupplierPrice().doubleValue() > 0)
+                .map(item -> new Order(item.getDepartment(), item.getName(), "" + item.getBarcode(), 0, item.getSupplierPrice().doubleValue()))
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     private ResponseEntity<ArrayOfClsItemsType> getProductsFromComax() {
