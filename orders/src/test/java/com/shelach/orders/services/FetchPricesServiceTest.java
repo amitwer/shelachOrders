@@ -1,5 +1,6 @@
 package com.shelach.orders.services;
 
+import com.shelach.orders.comax.generated.pricesresult.GetAllItemsPricesByParamsResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +21,7 @@ class FetchPricesServiceTest {
 
     @Test
     void fetchPrices() {
-        when(mockRestTemplate.postForEntity(anyString(), any(), )
+        when(mockRestTemplate.postForEntity(anyString(), any(),any() )).thenReturn(GetAllItemsPricesByParamsResult)
                 fetchPricesService.
     }
 }
