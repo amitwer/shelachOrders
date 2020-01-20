@@ -1,32 +1,36 @@
 package com.shelach.orders.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.client.RequestMatcher;
+import org.springframework.test.web.client.match.MockRestRequestMatchers;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.client.RestTemplate;
 
-import java.rmi.server.RMIClassLoader;
-
+@Slf4j
 @ExtendWith(SpringExtension.class)
 class RestTemplateParsingTest {
-    @Autowired
     RestTemplate restTemplate;
     MockRestServiceServer mockRestServiceServer;
 
     @BeforeEach
     private void setup() {
-        mockRestServiceServer = MockRestServiceServer.createServer(restTemplate)
+        restTemplate = new RestTemplate();
+        mockRestServiceServer = MockRestServiceServer.createServer(restTemplate);
     }
 
 
     @Test
     void getAllItemsPricesIsParsedCorrectly(){
         String response = getClassItemsSalePricesResult();
-        mockRestServiceServer.expect(RequestMatcher.)
+        mockRestServiceServer.expect(MockRestRequestMatchers.anything()).andRespond(MockRestResponseCreators.withSuccess(getClassItemsSalePricesResult(), MediaType.APPLICATION_ATOM_XML));
+        String result = restTemplate.getForObject("https://amit.com/", String.class);
+        log.info("Response is  {}", result);
+        mockRestServiceServer.verify();
     }
 
     private String getClassItemsSalePricesResult() {
