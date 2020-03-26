@@ -1,10 +1,9 @@
 
 package com.shelach.orders.comax.generated.pricesresult;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import lombok.ToString;
+
+import javax.xml.bind.annotation.*;
 
 
 /**
@@ -24,6 +23,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  */
+@ToString
+@XmlRootElement(name = "Get_AllItemsPricesByParamsResponse")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Get_AllItemsPricesByParamsResponse", propOrder = {
         "getAllItemsPricesByParamsResult"
@@ -32,6 +33,9 @@ public class GetAllItemsPricesByParamsResponse {
 
     @XmlElement(name = "Get_AllItemsPricesByParamsResult", required = true)
     protected GetAllItemsPricesByParamsResult getAllItemsPricesByParamsResult;
+
+    @XmlAttribute
+    private String xmlns;
 
     /**
      * Gets the value of the getAllItemsPricesByParamsResult property.
@@ -53,4 +57,11 @@ public class GetAllItemsPricesByParamsResponse {
         this.getAllItemsPricesByParamsResult = value;
     }
 
+    public String getXmlns() {
+        return xmlns;
+    }
+
+    public void setXmlns(String xmlns) {
+        this.xmlns = xmlns;
+    }
 }
