@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
@@ -20,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = OrdersApplication.class)
+@TestPropertySource(properties = {"comax.username=login", "comax.password=dummyPass"})
+
 class RestTemplateParsingTest {
 
     @Autowired
