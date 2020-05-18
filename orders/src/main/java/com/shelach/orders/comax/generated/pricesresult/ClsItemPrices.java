@@ -1,4 +1,3 @@
-
 package com.shelach.orders.comax.generated.pricesresult;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -39,15 +38,15 @@ import javax.xml.bind.annotation.XmlType;
 public class ClsItemPrices {
 
     @XmlElement(name = "PriceListID")
-    protected int priceListID;
+    private int priceListID;
     @XmlElement(name = "Currency", required = true)
-    protected String currency;
+    private String currency;
     @XmlElement(name = "IsIncludeVat", required = true)
-    protected String isIncludeVat;
+    private String isIncludeVat;
     @XmlElement(name = "Price")
-    protected float price;
+    private double price;
     @XmlElement(name = "NetPrice")
-    protected float netPrice;
+    private float netPrice;
 
     /**
      * Gets the value of the priceListID property.
@@ -106,14 +105,16 @@ public class ClsItemPrices {
     /**
      * Gets the value of the price property.
      */
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
     /**
      * Sets the value of the price property.
+     *
+     * @param value
      */
-    public void setPrice(float value) {
+    public void setPrice(double value) {
         this.price = value;
     }
 
