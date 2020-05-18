@@ -29,8 +29,6 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Lists.list;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -78,7 +76,7 @@ class OrdersControllerClientSideTest {
     @MethodSource("expectedProductsProvider")
     @WithMockUser(username = "Amit", password = "Amit")
     void loginReturnsProductTable(List<Order> expectedProducts) throws Exception {
-        when(fetchOrdersService.getProducts(any())).thenReturn(expectedProducts);
+//        when(fetchOrdersService.getProducts(any())).thenReturn(expectedProducts);
         MvcResult mvcResult = mvc.perform(get("").with(csrf())).andReturn();
         verifyOrdersTable(expectedProducts, mvcResult);
         verifyOrdersSummeryTable(expectedProducts, mvcResult);

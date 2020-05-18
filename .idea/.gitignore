@@ -20,3 +20,6 @@ target/
 /inspectionProfiles/Project_Default.xml
 /compiler.xml
 /encodings.xml
+
+# Default ignored files
+/shelf/

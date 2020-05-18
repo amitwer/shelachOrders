@@ -1,0 +1,41 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           targetNamespace="http://ws.comax.co.il/Comax_WebServices/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="Get_AllItemsPricesByParamsResponse" type="com:Get_AllItemsPricesByParamsResponse"
+                xmlns:com="http://ws.comax.co.il/Comax_WebServices/"/>
+    <xs:complexType name="ClsItemPrices">
+        <xs:sequence>
+            <xs:element type="xs:int" name="PriceListID"/>
+            <xs:element type="xs:string" name="Currency"/>
+            <xs:element type="xs:string" name="IsIncludeVat"/>
+            <xs:element type="xs:float" name="Price"/>
+            <xs:element type="xs:float" name="NetPrice"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SalesPrice">
+        <xs:sequence>
+            <xs:element type="com:ClsItemPrices" name="ClsItemPrices" maxOccurs="unbounded" minOccurs="0"
+                        xmlns:com="http://ws.comax.co.il/Comax_WebServices/"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ClsItemsSalePrices">
+        <xs:sequence>
+            <xs:element type="xs:string" name="Name"/>
+            <xs:element type="xs:byte" name="ID"/>
+            <xs:element type="xs:byte" name="Barcode"/>
+            <xs:element type="xs:string" name="AlternateID"/>
+            <xs:element type="com:SalesPrice" name="SalesPrice" xmlns:com="http://ws.comax.co.il/Comax_WebServices/"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Get_AllItemsPricesByParamsResult">
+        <xs:sequence>
+            <xs:element type="com:ClsItemsSalePrices" name="ClsItemsSalePrices" maxOccurs="unbounded" minOccurs="0"
+                        xmlns:com="http://ws.comax.co.il/Comax_WebServices/"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Get_AllItemsPricesByParamsResponse">
+        <xs:sequence>
+            <xs:element type="com:Get_AllItemsPricesByParamsResult" name="Get_AllItemsPricesByParamsResult"
+                        xmlns:com="http://ws.comax.co.il/Comax_WebServices/"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
