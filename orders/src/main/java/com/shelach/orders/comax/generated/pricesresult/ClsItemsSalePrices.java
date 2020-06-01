@@ -1,4 +1,3 @@
-
 package com.shelach.orders.comax.generated.pricesresult;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -39,15 +38,15 @@ import javax.xml.bind.annotation.XmlType;
 public class ClsItemsSalePrices {
 
     @XmlElement(name = "Name", required = true)
-    protected String name;
+    private String name;
     @XmlElement(name = "ID")
-    protected byte id;
+    private byte id;
     @XmlElement(name = "Barcode")
-    protected byte barcode;
+    private String barcode;
     @XmlElement(name = "AlternateID", required = true)
-    protected String alternateID;
+    private String alternateID;
     @XmlElement(name = "SalesPrice", required = true)
-    protected SalesPrice salesPrice;
+    private SalesPrice salesPrice;
 
     /**
      * Gets the value of the name property.
@@ -86,14 +85,16 @@ public class ClsItemsSalePrices {
     /**
      * Gets the value of the barcode property.
      */
-    public byte getBarcode() {
+    public String getBarcode() {
         return barcode;
     }
 
     /**
      * Sets the value of the barcode property.
+     *
+     * @param value
      */
-    public void setBarcode(byte value) {
+    public void setBarcode(String value) {
         this.barcode = value;
     }
 

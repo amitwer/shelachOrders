@@ -22,13 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = OrdersApplication.class)
 @TestPropertySource(properties = {"comax.username=login", "comax.password=dummyPass"})
-
 class RestTemplateParsingTest {
 
     @Autowired
+    private
     RestTemplate restTemplate;
-    MockRestServiceServer mockRestServiceServer;
+    private MockRestServiceServer mockRestServiceServer;
 
+    @SuppressWarnings("WeakerAccess")
     @BeforeEach
     private void setup() {
         mockRestServiceServer = MockRestServiceServer.createServer(restTemplate);
@@ -37,14 +38,14 @@ class RestTemplateParsingTest {
 
     @Test
     void getAllItemsPricesIsParsedCorrectly() {
-        mockRestServiceServer.expect(MockRestRequestMatchers.anything()).andRespond(MockRestResponseCreators.withSuccess(getClassItemsSalePricesResult(), MediaType.APPLICATION_ATOM_XML));
+        mockRestServiceServer.expect(MockRestRequestMatchers.anything()).andRespond(MockRestResponseCreators.withSuccess(getAllItemsPricesByParamsResult(), MediaType.APPLICATION_ATOM_XML));
         GetAllItemsPricesByParamsResponse result = restTemplate.getForObject("https://amit.com/", GetAllItemsPricesByParamsResponse.class);
         mockRestServiceServer.verify();
         //noinspection ConstantConditions
         assertThat(result.getGetAllItemsPricesByParamsResult().getClsItemsSalePrices().get(0).getName()).isEqualTo("AmitItemName");
     }
 
-    private String getClassItemsSalePricesResult() {
+    private String getAllItemsPricesByParamsResult() {
         return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
                 "\t<soap:Body>\n" +
