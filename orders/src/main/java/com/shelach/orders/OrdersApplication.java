@@ -24,6 +24,7 @@ public class OrdersApplication {
         RestTemplate restTemplate = new RestTemplate();
         List<HttpMessageConverter<?>> messageConverters = new LinkedList<>();
         messageConverters.add(new GetAllItemsPricesMessageConverter());
+        messageConverters.addAll(restTemplate.getMessageConverters());
         restTemplate.setMessageConverters(messageConverters);
         return restTemplate;
     }
