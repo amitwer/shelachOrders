@@ -1,0 +1,149 @@
+<xs:schema elementFormDefault="qualified" targetNamespace="http://ws.comax.co.il/Comax_WebServices/"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="ArrayOfClsItems" type="com:ArrayOfClsItemsType"
+                xmlns:com="http://ws.comax.co.il/Comax_WebServices/"/>
+    <xs:complexType name="ItemModelType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="Name"/>
+            <xs:element type="xs:string" name="ID"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ItemColorType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="Name"/>
+            <xs:element type="xs:string" name="ID"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ItemSizeType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="Name"/>
+            <xs:element type="xs:string" name="ID"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ClsItemsType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="Name"/>
+            <xs:element type="xs:string" name="Size"/>
+            <xs:element type="xs:byte" name="ID"/>
+            <xs:element type="xs:byte" name="OldID"/>
+            <xs:element type="xs:byte" name="Barcode"/>
+            <xs:element type="xs:byte" name="PurchasingAccountID"/>
+            <xs:element type="xs:byte" name="SalesAccountID"/>
+            <xs:element type="xs:string" name="AlternateID"/>
+            <xs:element type="xs:string" name="WorkByAlternateID"/>
+            <xs:element type="xs:string" name="SerialNo"/>
+            <xs:element type="xs:byte" name="Price"/>
+            <xs:element type="xs:byte" name="Quantity"/>
+            <xs:element type="xs:byte" name="DiscountPercent"/>
+            <xs:element type="xs:byte" name="DiscountTotal"/>
+            <xs:element type="xs:byte" name="TotalSum"/>
+            <xs:element type="xs:byte" name="MaxQuantityInOrder"/>
+            <xs:element type="xs:byte" name="CorrectionPrice"/>
+            <xs:element type="xs:byte" name="CorrectionDiscountPercent"/>
+            <xs:element type="xs:byte" name="CorrectionQuantity"/>
+            <xs:element type="xs:byte" name="ConversionQuantity"/>
+            <xs:element type="xs:string" name="SuperDepartment"/>
+            <xs:element type="xs:byte" name="SuperDepartmentCode"/>
+            <xs:element type="xs:string" name="Department"/>
+            <xs:element type="xs:byte" name="DepartmentCode"/>
+            <xs:element type="xs:string" name="DepartmentEnglishName"/>
+            <xs:element type="xs:string" name="Group"/>
+            <xs:element type="xs:byte" name="GroupCode"/>
+            <xs:element type="xs:string" name="GroupEnglishName"/>
+            <xs:element type="xs:string" name="Sub_Group"/>
+            <xs:element type="xs:byte" name="Sub_GroupCode"/>
+            <xs:element type="xs:string" name="Sub_GroupEnglishName"/>
+            <xs:element type="xs:string" name="Manufacturer"/>
+            <xs:element type="xs:byte" name="ManufacturerCode"/>
+            <xs:element type="com:ItemModelType" name="ItemModel" xmlns:com="http://ws.comax.co.il/Comax_WebServices/"/>
+            <xs:element type="com:ItemColorType" name="ItemColor" xmlns:com="http://ws.comax.co.il/Comax_WebServices/"/>
+            <xs:element type="com:ItemSizeType" name="ItemSize" xmlns:com="http://ws.comax.co.il/Comax_WebServices/"/>
+            <xs:element type="xs:string" name="Attribute1"/>
+            <xs:element type="xs:string" name="Attribute1Code"/>
+            <xs:element type="xs:string" name="Attribute2"/>
+            <xs:element type="xs:string" name="Attribute2Code"/>
+            <xs:element type="xs:string" name="Attribute3"/>
+            <xs:element type="xs:string" name="Attribute3Code"/>
+            <xs:element type="xs:string" name="Attribute4"/>
+            <xs:element type="xs:string" name="Attribute4Code"/>
+            <xs:element type="xs:string" name="Attribute5"/>
+            <xs:element type="xs:string" name="Attribute5Code"/>
+            <xs:element type="xs:short" name="SupplierID"/>
+            <xs:element type="xs:string" name="SupplierName"/>
+            <xs:element type="xs:string" name="SupplierCatalogNumber"/>
+            <xs:element type="xs:float" name="SupplierPrice"/>
+            <xs:element type="xs:string" name="ArchiveDate"/>
+            <xs:element type="xs:string" name="BlockPurchaseDate"/>
+            <xs:element type="xs:string" name="BlockSalesDate"/>
+            <xs:element type="xs:string" name="EnglishName"/>
+            <xs:element type="xs:byte" name="PromoID"/>
+            <xs:element type="xs:byte" name="PromoRank"/>
+            <xs:element type="xs:byte" name="MatchingItemID"/>
+            <xs:element type="xs:byte" name="MatchingItemQuantity"/>
+            <xs:element type="xs:byte" name="UnitsQuantity"/>
+            <xs:element type="xs:byte" name="Length"/>
+            <xs:element type="xs:string" name="LengthSize"/>
+            <xs:element type="xs:byte" name="Width"/>
+            <xs:element type="xs:string" name="WidthSize"/>
+            <xs:element type="xs:byte" name="Height"/>
+            <xs:element type="xs:string" name="HeightSize"/>
+            <xs:element type="xs:byte" name="Weight"/>
+            <xs:element type="xs:string" name="WeightSize"/>
+            <xs:element type="xs:string" name="PicURL" minOccurs="0"/>
+            <xs:element type="xs:byte" name="CurrentStoreID"/>
+            <xs:element type="xs:byte" name="BaseLine"/>
+            <xs:element type="xs:byte" name="BaseDocNumber"/>
+            <xs:element type="xs:byte" name="BaseReference"/>
+            <xs:element type="xs:byte" name="BaseYear"/>
+            <xs:element type="xs:byte" name="Conversion"/>
+            <xs:element type="xs:byte" name="AdditionalConversion"/>
+            <xs:element type="xs:string" name="NotShowInWeb"/>
+            <xs:element type="xs:string" name="SetModelProperties"/>
+            <xs:element type="xs:string" name="HierarchyUpdate"/>
+            <xs:element type="xs:string" name="DownloadPriceTransparencyAfter48Hours"/>
+            <xs:element type="xs:string" name="ItemData"/>
+            <xs:element type="xs:byte" name="RejectTypeID"/>
+            <xs:element type="xs:string" name="OpenDate"/>
+            <xs:element type="xs:byte" name="WarrantyMonths"/>
+            <xs:element type="xs:string" name="Ingredients"/>
+            <xs:element type="xs:string" name="FullIngredientsReplace"/>
+            <xs:element type="xs:byte" name="CmtAmara"/>
+            <xs:element type="xs:string" name="AmaraBy"/>
+            <xs:element type="xs:byte" name="CmtAmara2"/>
+            <xs:element type="xs:byte" name="InternalAmara"/>
+            <xs:element type="xs:byte" name="Line"/>
+            <xs:element type="xs:byte" name="LengthOptic"/>
+            <xs:element type="xs:byte" name="DiagonalOptic"/>
+            <xs:element type="xs:byte" name="HeightOptic"/>
+            <xs:element type="xs:string" name="NameInWeb"/>
+            <xs:element type="xs:string" name="NosafKod_2"/>
+            <xs:element type="xs:string" name="NosafNm_2"/>
+            <xs:element type="xs:string" name="NosafKod_3"/>
+            <xs:element type="xs:string" name="NosafNm_3"/>
+            <xs:element type="xs:string" name="AtarDescription"/>
+            <xs:element type="xs:byte" name="Energia"/>
+            <xs:element type="xs:byte" name="Pahmemot"/>
+            <xs:element type="xs:byte" name="Helbonim"/>
+            <xs:element type="xs:byte" name="Shumanim"/>
+            <xs:element type="xs:byte" name="Colestrol"/>
+            <xs:element type="xs:byte" name="MhrMivza"/>
+            <xs:element type="xs:string" name="SwBonos"/>
+            <xs:element type="xs:byte" name="BonosFline"/>
+            <xs:element type="xs:byte" name="BonosTline"/>
+            <xs:element type="xs:byte" name="Mirsham_PhrmaSoft"/>
+            <xs:element type="xs:byte" name="CustomerMakat"/>
+            <xs:element type="xs:string" name="QtyType"/>
+            <xs:element type="xs:byte" name="NoDiscount"/>
+            <xs:element type="xs:byte" name="PriceUSD"/>
+            <xs:element type="xs:byte" name="PriceNIS"/>
+            <xs:element type="xs:byte" name="WarrantySupplier"/>
+            <xs:element type="xs:string" name="WarrantyRemark"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ArrayOfClsItemsType">
+        <xs:sequence>
+            <xs:element type="com:ClsItemsType" name="ClsItems" maxOccurs="unbounded" minOccurs="0"
+                        xmlns:com="http://ws.comax.co.il/Comax_WebServices/"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
