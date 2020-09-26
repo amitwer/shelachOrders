@@ -20,4 +20,4 @@ server:
     access-log-pattern: "%h %l %u %t %r %s %b %D"
 comax:
   api:
-    items-url: http://ws.comax.co.il/Comax_WebServices/Items_Service.asmx/
+    items-url: http://ws.comax.co.il/Comax_WebServices/Items_Service.asmx

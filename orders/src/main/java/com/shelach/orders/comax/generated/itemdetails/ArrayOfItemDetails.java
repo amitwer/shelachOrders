@@ -30,10 +30,10 @@ import java.util.List;
 @XmlType(name = "ArrayOfClsItemsType", namespace = "http://ws.comax.co.il/Comax_WebServices/", propOrder = {
         "clsItems"
 })
-public class ArrayOfClsItemsType {
+public class ArrayOfItemDetails {
 
     @XmlElement(name = "ClsItems", namespace = "http://ws.comax.co.il/Comax_WebServices/")
-    protected List<ClsItemsType> clsItems;
+    protected List<ItemDetails> clsItems;
 
     /**
      * Gets the value of the clsItems property.
@@ -53,9 +53,9 @@ public class ArrayOfClsItemsType {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link ClsItemsType }
+     * {@link ItemDetails }
      */
-    public List<ClsItemsType> getClsItems() {
+    public List<ItemDetails> getClsItems() {
         if (clsItems == null) {
             clsItems = new ArrayList<>();
         }

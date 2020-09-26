@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,13 +30,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {"comax.username=login", "comax.password=dummyPass"})
+@ActiveProfiles("test")
 class AcceptOrdersControllerClientSideTest {
 
-    @SuppressWarnings("unused")
     @Autowired
     private MockMvc mvc;
 
-    @SuppressWarnings("unused")
     @MockBean
     private PlaceOrdersService placeOrdersService;
 
