@@ -1,64 +1,77 @@
-package com.shelach.orders.services;
+package com.shelach.orders.testbeans;
 
-import com.shelach.orders.comax.generated.itemdetails.ArrayOfItemDetails;
-import com.shelach.orders.comax.generated.pricesresult.GetAllItemsPricesByParamsResponse;
-import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.stereotype.Service;
+import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.ResponseCreator;
 import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.client.RestTemplate;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.io.IOException;
 
-@Slf4j
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = RestTemplateBean.class)
-@TestPropertySource(properties = {"comax.username=login", "comax.password=dummyPass"})
-class RestTemplateParsingTest {
+@Service
+@Profile("test")
+public class MockServerBeans {
+    @SuppressWarnings("FieldCanBeLocal")
+    private final MockRestServiceServer mockRestServiceServer;
 
-    @Autowired
-    private RestTemplate restTemplate;
-    private MockRestServiceServer mockRestServiceServer;
-
-    @SuppressWarnings("WeakerAccess")
-    @BeforeEach
-    private void setup() {
-        mockRestServiceServer = MockRestServiceServer.createServer(restTemplate);
-    }
-
-
-    @Test
-    void getAllItemsPricesIsParsedCorrectly() {
-        mockRestServiceServer.expect(MockRestRequestMatchers.anything()).andRespond(MockRestResponseCreators.withSuccess(getAllItemsPricesByParamsResult(), MediaType.APPLICATION_ATOM_XML));
-        GetAllItemsPricesByParamsResponse result = restTemplate.getForObject("https://amit.com/", GetAllItemsPricesByParamsResponse.class);
-        mockRestServiceServer.verify();
-        //noinspection ConstantConditions
-        assertThat(result.getGetAllItemsPricesByParamsResult().getClsItemsSalePrices().get(0).getName()).isEqualTo("AmitItemName");
+    MockServerBeans(RestTemplate restTemplate, @Value("${comax.api.items-url}") String baseurl) {
+        this.mockRestServiceServer = MockRestServiceServer.createServer(restTemplate);
+        mockRestServiceServer.expect(ExpectedCount.manyTimes(), MockRestRequestMatchers.anything()).andRespond(new MyResponseCreator(baseurl));
 
     }
 
 
-    @Test
-    void getItemDetailsIsParsedCorrectly() {
-        mockRestServiceServer.expect(MockRestRequestMatchers.anything())
-                .andRespond(MockRestResponseCreators.withSuccess(getItemsDetailsResponse(), MediaType.APPLICATION_ATOM_XML));
-        ArrayOfItemDetails result = restTemplate.getForObject("https://amit.com/", ArrayOfItemDetails.class);
-        mockRestServiceServer.verify();
-        //noinspection ConstantConditions
-        assertThat(result.getClsItems()).hasSize(2).extracting("department").isEqualTo(Lists.list("עופות טריים", "מכולת"));
+    private String getAllItemsPricesByParamsResult() {
+        return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
+                "\t<soap:Body>\n" +
+                "\t\t<Get_AllItemsPricesByParamsResponse xmlns=\"http://ws.comax.co.il/Comax_WebServices/\">\n" +
+                "\t\t\t<Get_AllItemsPricesByParamsResult>\n" +
+                "\t\t\t\t<ClsItemsSalePrices>\n" +
+                "\t\t\t\t\t<Name>AmitItemName</Name>\n" +
+                "\t\t\t\t\t<ID>0</ID>\n" +
+                "\t\t\t\t\t<Barcode>0</Barcode>\n" +
+                "\t\t\t\t\t<AlternateID />\n" +
+                "\t\t\t\t\t<SalesPrice>\n" +
+                "\t\t\t\t\t\t<ClsItemPrices>\n" +
+                "\t\t\t\t\t\t\t<PriceListID>7525</PriceListID>\n" +
+                "\t\t\t\t\t\t\t<Currency />\n" +
+                "\t\t\t\t\t\t\t<IsIncludeVat>false</IsIncludeVat>\n" +
+                "\t\t\t\t\t\t\t<Price>19.7</Price>\n" +
+                "\t\t\t\t\t\t\t<NetPrice>19.7</NetPrice>\n" +
+                "\t\t\t\t\t\t</ClsItemPrices>\n" +
+                "\t\t\t\t\t\t<ClsItemPrices>\n" +
+                "\t\t\t\t\t\t\t<PriceListID>99999</PriceListID>\n" +
+                "\t\t\t\t\t\t\t<Currency />\n" +
+                "\t\t\t\t\t\t\t<IsIncludeVat>false</IsIncludeVat>\n" +
+                "\t\t\t\t\t\t\t<Price>19.7</Price>\n" +
+                "\t\t\t\t\t\t\t<NetPrice>19.7</NetPrice>\n" +
+                "\t\t\t\t\t\t</ClsItemPrices>\n" +
+                "\t\t\t\t\t\t<ClsItemPrices>\n" +
+                "\t\t\t\t\t\t\t<PriceListID>12</PriceListID>\n" +
+                "\t\t\t\t\t\t\t<Currency />\n" +
+                "\t\t\t\t\t\t\t<IsIncludeVat>true</IsIncludeVat>\n" +
+                "\t\t\t\t\t\t\t<Price>29.9</Price>\n" +
+                "\t\t\t\t\t\t\t<NetPrice>29.9</NetPrice>\n" +
+                "\t\t\t\t\t\t</ClsItemPrices>\n" +
+                "\t\t\t\t\t</SalesPrice>\n" +
+                "\t\t\t\t</ClsItemsSalePrices>" +
+                "\t\t\t</Get_AllItemsPricesByParamsResult>\n" +
+                "\t\t</Get_AllItemsPricesByParamsResponse>\n" +
+                "\t</soap:Body>\n" +
+                "</soap:Envelope>";
     }
+
 
     private String getItemsDetailsResponse() {
-        //noinspection SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection
+        //noinspection SpellCheckingInspection
         return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                 "<ArrayOfClsItems xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://ws.comax.co.il/Comax_WebServices/\">\n" +
                 "\t<ClsItems>\n" +
@@ -317,47 +330,25 @@ class RestTemplateParsingTest {
                 "</ArrayOfClsItems>";
     }
 
+    private class MyResponseCreator implements ResponseCreator {
+        private final String baseurl;
 
-    private String getAllItemsPricesByParamsResult() {
-        return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
-                "\t<soap:Body>\n" +
-                "\t\t<Get_AllItemsPricesByParamsResponse xmlns=\"http://ws.comax.co.il/Comax_WebServices/\">\n" +
-                "\t\t\t<Get_AllItemsPricesByParamsResult>\n" +
-                "\t\t\t\t<ClsItemsSalePrices>\n" +
-                "\t\t\t\t\t<Name>AmitItemName</Name>\n" +
-                "\t\t\t\t\t<ID>0</ID>\n" +
-                "\t\t\t\t\t<Barcode>0</Barcode>\n" +
-                "\t\t\t\t\t<AlternateID />\n" +
-                "\t\t\t\t\t<SalesPrice>\n" +
-                "\t\t\t\t\t\t<ClsItemPrices>\n" +
-                "\t\t\t\t\t\t\t<PriceListID>7525</PriceListID>\n" +
-                "\t\t\t\t\t\t\t<Currency />\n" +
-                "\t\t\t\t\t\t\t<IsIncludeVat>false</IsIncludeVat>\n" +
-                "\t\t\t\t\t\t\t<Price>19.7</Price>\n" +
-                "\t\t\t\t\t\t\t<NetPrice>19.7</NetPrice>\n" +
-                "\t\t\t\t\t\t</ClsItemPrices>\n" +
-                "\t\t\t\t\t\t<ClsItemPrices>\n" +
-                "\t\t\t\t\t\t\t<PriceListID>99999</PriceListID>\n" +
-                "\t\t\t\t\t\t\t<Currency />\n" +
-                "\t\t\t\t\t\t\t<IsIncludeVat>false</IsIncludeVat>\n" +
-                "\t\t\t\t\t\t\t<Price>19.7</Price>\n" +
-                "\t\t\t\t\t\t\t<NetPrice>19.7</NetPrice>\n" +
-                "\t\t\t\t\t\t</ClsItemPrices>\n" +
-                "\t\t\t\t\t\t<ClsItemPrices>\n" +
-                "\t\t\t\t\t\t\t<PriceListID>12</PriceListID>\n" +
-                "\t\t\t\t\t\t\t<Currency />\n" +
-                "\t\t\t\t\t\t\t<IsIncludeVat>true</IsIncludeVat>\n" +
-                "\t\t\t\t\t\t\t<Price>29.9</Price>\n" +
-                "\t\t\t\t\t\t\t<NetPrice>29.9</NetPrice>\n" +
-                "\t\t\t\t\t\t</ClsItemPrices>\n" +
-                "\t\t\t\t\t</SalesPrice>\n" +
-                "\t\t\t\t</ClsItemsSalePrices>" +
-                "\t\t\t</Get_AllItemsPricesByParamsResult>\n" +
-                "\t\t</Get_AllItemsPricesByParamsResponse>\n" +
-                "\t</soap:Body>\n" +
-                "</soap:Envelope>";
+        public MyResponseCreator(String baseurl) {
+
+            this.baseurl = baseurl;
+        }
+
+        @Override
+        public ClientHttpResponse createResponse(ClientHttpRequest request) throws IOException {
+            @SuppressWarnings("ConstantConditions") String url = request.getURI().toString();
+            if (url.equals(baseurl + "/Get_AllItemsDetailsBySearch_plus")) {
+                return MockRestResponseCreators.withSuccess(getItemsDetailsResponse(), MediaType.APPLICATION_ATOM_XML).createResponse(request);
+            } else if (url.equals(baseurl)) {
+                return MockRestResponseCreators.withSuccess(getAllItemsPricesByParamsResult(), MediaType.APPLICATION_ATOM_XML).createResponse(request);
+
+            } else throw new IllegalArgumentException("Request to <" + url + "> is not supported");
+
+
+        }
     }
-
-
 }

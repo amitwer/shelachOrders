@@ -20,4 +20,8 @@ server:
     access-log-pattern: "%h %l %u %t %r %s %b %D"
 comax:
   api:
-    items-url: http://ws.comax.co.il/Comax_WebServices/Items_Service.asmx/
+    items-url: http://ws.comax.co.il/Comax_WebServices/Items_Service.asmx
+shelach:
+  use-proxy: false
+  proxy-port: 8888 #default fiddler port
+
