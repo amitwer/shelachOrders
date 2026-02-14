@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "comax.api.items-url",
+      "type": "java.lang.String",
+      "description": "Base url for comax items service."
+    },
+    {
+      "name": "shelach.proxy-port",
+      "type": "java.lang.String",
+      "description": "In case we want our rest-template to go through a proxy. Default is 8888."
+    },
+    {
+      "name": "shelach.use-proxy",
+      "type": "java.lang.String",
+      "description": "Should pass RestTemplate traffic through proxy. Default is false."
+    }
+  ]
+}

@@ -258,7 +258,7 @@ import javax.xml.bind.annotation.XmlType;
         "warrantySupplier",
         "warrantyRemark"
 })
-public class ClsItemsType {
+public class ItemDetails {
 
     @XmlElement(name = "Name", namespace = "http://ws.comax.co.il/Comax_WebServices/", required = true)
     protected String name;
@@ -269,7 +269,7 @@ public class ClsItemsType {
     @XmlElement(name = "OldID", namespace = "http://ws.comax.co.il/Comax_WebServices/")
     protected byte oldID;
     @XmlElement(name = "Barcode", namespace = "http://ws.comax.co.il/Comax_WebServices/")
-    protected byte barcode;
+    protected String barcode;
     @XmlElement(name = "PurchasingAccountID", namespace = "http://ws.comax.co.il/Comax_WebServices/")
     protected byte purchasingAccountID;
     @XmlElement(name = "SalesAccountID", namespace = "http://ws.comax.co.il/Comax_WebServices/")
@@ -564,14 +564,14 @@ public class ClsItemsType {
     /**
      * Gets the value of the barcode property.
      */
-    public byte getBarcode() {
+    public String getBarcode() {
         return barcode;
     }
 
     /**
      * Sets the value of the barcode property.
      */
-    public void setBarcode(byte value) {
+    public void setBarcode(String value) {
         this.barcode = value;
     }
 

@@ -1,7 +1,6 @@
 package com.shelach.orders.services;
 
-import com.shelach.orders.OrdersApplication;
-import com.shelach.orders.comax.generated.itemdetails.ArrayOfClsItemsType;
+import com.shelach.orders.comax.generated.itemdetails.ArrayOfItemDetails;
 import com.shelach.orders.comax.generated.pricesresult.GetAllItemsPricesByParamsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
@@ -22,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = OrdersApplication.class)
+@ContextConfiguration(classes = RestTemplateBean.class)
 @TestPropertySource(properties = {"comax.username=login", "comax.password=dummyPass"})
 class RestTemplateParsingTest {
 
@@ -44,19 +43,22 @@ class RestTemplateParsingTest {
         mockRestServiceServer.verify();
         //noinspection ConstantConditions
         assertThat(result.getGetAllItemsPricesByParamsResult().getClsItemsSalePrices().get(0).getName()).isEqualTo("AmitItemName");
+
     }
 
 
     @Test
     void getItemDetailsIsParsedCorrectly() {
-        mockRestServiceServer.expect(MockRestRequestMatchers.anything()).andRespond(MockRestResponseCreators.withSuccess(getItemsDetailsResponse(), MediaType.APPLICATION_ATOM_XML));
-        ArrayOfClsItemsType result = restTemplate.getForObject("https://amit.com/", ArrayOfClsItemsType.class);
+        mockRestServiceServer.expect(MockRestRequestMatchers.anything())
+                .andRespond(MockRestResponseCreators.withSuccess(getItemsDetailsResponse(), MediaType.APPLICATION_ATOM_XML));
+        ArrayOfItemDetails result = restTemplate.getForObject("https://amit.com/", ArrayOfItemDetails.class);
         mockRestServiceServer.verify();
         //noinspection ConstantConditions
         assertThat(result.getClsItems()).hasSize(2).extracting("department").isEqualTo(Lists.list("עופות טריים", "מכולת"));
     }
 
     private String getItemsDetailsResponse() {
+        //noinspection SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection
         return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                 "<ArrayOfClsItems xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://ws.comax.co.il/Comax_WebServices/\">\n" +
                 "\t<ClsItems>\n" +

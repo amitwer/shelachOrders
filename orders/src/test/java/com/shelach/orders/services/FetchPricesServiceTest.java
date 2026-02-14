@@ -33,14 +33,14 @@ class FetchPricesServiceTest {
 
     @Test
     void fetchPricesCallsComaxWithCorrectParameters() {
-        //noinspection unchecked
         when(mockRestTemplate.postForEntity(anyString(), any(), any())).thenReturn(mockResponse(list(1)));
-        ArgumentCaptor<HttpEntity> captor = ArgumentCaptor.forClass(HttpEntity.class);
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<HttpEntity<String>> captor = ArgumentCaptor.forClass(HttpEntity.class);
         fetchPricesService.getAllPrices();
         verify(mockRestTemplate, times(1)).postForEntity(anyString(), captor.capture(), eq(GetAllItemsPricesByParamsResponse.class));
 
-        HttpEntity request = captor.getValue();
-        Document parsedBody = Jsoup.parse((String) request.getBody(), "", Parser.xmlParser());
+        HttpEntity<String> request = captor.getValue();
+        Document parsedBody = Jsoup.parse(request.getBody(), "", Parser.xmlParser());
         Elements soapRequest = parsedBody.getElementsByTag("Get_AllItemsPricesByParams");
         assertThat(soapRequest).hasSize(1);
         assertThat(parsedBody.getElementsByTag("LoginID").text()).isNotNull().isEqualTo(EXPECTED_USER);
@@ -50,14 +50,13 @@ class FetchPricesServiceTest {
     @BeforeEach
     void setUp() {
         mockRestTemplate = Mockito.mock(RestTemplate.class);
-        fetchPricesService = new FetchPricesService(mockRestTemplate, new ComaxCredentialsProvider(EXPECTED_USER, EXPECTED_PASSWORD));
+        fetchPricesService = new FetchPricesService(mockRestTemplate, new ComaxCredentialsProvider(EXPECTED_USER, EXPECTED_PASSWORD), "https://dummyUrl");
     }
 
     @Test
     void fetchPricesReturnsPricePerListId() {
         List<Integer> product1List = list(1, 2, 3);
         List<Integer> product2List = list(1, 4, 5);
-        //noinspection unchecked
         when(mockRestTemplate.postForEntity(anyString(), any(), any())).thenReturn(mockResponse(product1List, product2List));
         Map<Integer, Set<Order>> result = fetchPricesService.getAllPrices();
         Set<Integer> expectedKeys = new HashSet<>();
@@ -69,7 +68,6 @@ class FetchPricesServiceTest {
 
     @Test
     void fetchPricesIgnoresProductsWithPriceOfZero() {
-        //noinspection unchecked
         when(mockRestTemplate.postForEntity(anyString(), any(), any())).thenReturn(mockResponse(list(0, 2)));
         Map<Integer, Set<Order>> result = fetchPricesService.getAllPrices();
         assertThat(result.keySet()).hasSize(1).containsExactly(2);

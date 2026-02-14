@@ -6,12 +6,15 @@ import com.shelach.orders.comax.generated.pricesresult.GetAllItemsPricesByParams
 import com.shelach.orders.data.Order;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -19,18 +22,23 @@ import java.util.*;
 public class FetchPricesService {
     private final RestTemplate template;
     private final ComaxCredentialsProvider comaxCredentialsProvider;
+    private final String itemsSoapUrl;
 
     @Autowired
-    public FetchPricesService(RestTemplate template, ComaxCredentialsProvider comaxCredentialsProvider) {
+    public FetchPricesService(RestTemplate template, ComaxCredentialsProvider comaxCredentialsProvider, @Value("${comax.api.items-url}") String itemsSoapUrl) {
 
         this.template = template;
         this.comaxCredentialsProvider = comaxCredentialsProvider;
+        this.itemsSoapUrl = itemsSoapUrl;
     }
 
     public Map<Integer, Set<Order>> getAllPrices() {
         log.info("Fetching all Prices");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "soap+xml", StandardCharsets.UTF_8));
+        HttpEntity<String> request = new HttpEntity<>(createPricesRequest(), headers);
         ResponseEntity<GetAllItemsPricesByParamsResponse> responseEntity =
-                template.postForEntity("bla", new HttpEntity<>(createPricesRequest(), new HttpHeaders()),
+                template.postForEntity(itemsSoapUrl, request,
                         GetAllItemsPricesByParamsResponse.class);
         GetAllItemsPricesByParamsResponse allItemsByPrice = responseEntity.getBody();
         return extractPriceLists(allItemsByPrice);
@@ -62,6 +70,7 @@ public class FetchPricesService {
                 "  <soap12:Body>\n" +
                 "    <Get_AllItemsPricesByParams xmlns=\"http://ws.comax.co.il/Comax_WebServices/\">\n" +
                 "      <Params>\n" +
+                "            <PriceListID>13</PriceListID>\n" +
                 "      </Params>\n" +
                 "      <LoginID>" + this.comaxCredentialsProvider.getUsername() + "</LoginID>\n" +
                 "      <LoginPassword>" + this.comaxCredentialsProvider.getLoginPassword() + "</LoginPassword>\n" +
