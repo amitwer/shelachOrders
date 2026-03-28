@@ -56,3 +56,9 @@
 #chooseProductName {
     min-width: 10em;
 }
+
+
+#overallOrderSummeryCost, #overallOrderCost {
+    width: 10em;
+    text-align: center;
+}

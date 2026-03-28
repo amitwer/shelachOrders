@@ -10,11 +10,21 @@
 <body style="font-family:'David',sans-serif" onload="initPage()">
 <div style="text-align: center;">
     <H1><span th:text="${username}+' ברוך הבא '"></span></H1>
-    <H2>אנא הוסף את המוצרים הרצויים להזמנה</H2>
+    <H2>אנא בצע/י הזמנה</H2>
+    <H3>הוראות שימוש - לאחר בחירת מחלקה, כלל המוצרים מהמחלקה יופיעו בטבלה מתחת. יש להזין את הכמות של כל מוצר שרוצים
+        להזמין, לאחר מכן ללחוץ עך כפתור "הוסף להזמנה"</H3>
+    <br>
+    <label for="selectDepartment"></label>
+    <select id="selectDepartment" onchange="departmentSelected()">
+        <option>בחר מחלקה...</option>
+    </select>
+    <br>
+    <br>
+
     <table class="ordersTable" id="orderTable">
         <thead>
         <tr>
-            <th class="tableHeader">מחלקה</th>
+            <th class="tableHeader">מס"ד</th>
             <th class="tableHeader">קוד מוצר</th>
             <th class="tableHeader">שם מוצר</th>
             <th class="tableHeader">מחיר ליחידה/100 גרם</th>
@@ -23,24 +33,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td class="tableRows">
-                <label for="selectDepartment"></label><select id="selectDepartment" onchange="departmentSelected()">
-                <option>בחר מחלקה...</option>
-            </select>
-            </td>
-            <td class="tableRows"><label for="enterBarcode"></label><input type="text" id="enterBarcode"
-                                                                           onchange="getProductFromBarcode()"></td>
-            <td class="tableRows"><label for="chooseProductName"></label><select id="chooseProductName"
-                                                                                 onchange="getProductFromName()"></select>
-            </td>
-            <td class="tableRows"></td>
-            <td class="tableRows"><label for="enterAmount"></label><input type="number" id="enterAmount"
-                                                                          onchange="amountChosen()"></td>
-            <td class="tableRows"></td>
-        </tr>
         </tbody>
     </table>
+    <br>
+    <label for="overallOrderCost"></label><input type="text" id="overallOrderCost" readonly> :סה"כ עלות
     <br>
     <br>
     <button id="addProductBtn" onclick="addProduct()">הוסף להזמנה</button>
@@ -62,6 +58,8 @@
         </thead>
         <tbody></tbody>
     </table>
+    <br>
+    <label for="overallOrderSummeryCost"></label><input type="text" id="overallOrderSummeryCost" readonly> :סה"כ עלות
     <br>
     <br>
     <button type="button" id="deleteSelectedOrders" onclick="deleteSelectedOrders()">מחק הזמנות</button>
